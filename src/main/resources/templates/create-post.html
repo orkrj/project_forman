@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{fragments/header :: head}"></head>
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<main class="container-fluid">
+
+    <section class="row">
+        <section class="col-6 d-flex flex-column justify-content-center align-items-center text-start">
+            <h1 style="font-weight: bold">Create New Post</h1>
+            <p>Enter the details below</p>
+        </section>
+
+        <section class="col-6">
+            <div>
+                <form method="post" th:action="@{/posts/create}">
+                    <label>Service Title</label>
+                    <input class="form-control mb-4" type="text" name="title" placeholder="Enter title here">
+
+                    <label>Detailed Content</label>
+                    <textarea class="form-control" type="text" name="body" placeholder="Enter content here" style="resize: none" rows="8"></textarea>
+                    <p class="mb-4" style="color: #888888">Add as much information as you`d like</p>
+
+                    <button type="submit" class="btn btn-lg btn-dark">Submit</button>
+                </form>
+            </div>
+        </section>
+
+    </section>
+
+</main>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

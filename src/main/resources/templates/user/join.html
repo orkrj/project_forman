@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{fragments/header :: head}">
+
+    <title>join</title>
+    <link rel="stylesheet" href="/css/join.css">
+</head>
+<body class="join-page">
+
+<header th:insert="~{fragments/header :: header}"></header>
+
+<main class="container">
+    <div class="left">
+        <h1>Not a member yet?</h1>
+        <p>Already a member? <a href="/login">Log in</a></p>
+    </div>
+
+    <div class="right">
+        <form th:action="@{/join}" method="post" th:object="${userSignUpRequestDto}">
+            <div>
+                <label for="username">Username:</label>
+
+                <div class="username-container">
+                    <input type="text" id="username" name="username" th:field="*{username}" placeholder="Enter username" required>
+                    <button type="button" onclick="checkUsername()">Check Availability</button>
+                </div>
+                <div id="usernameCheckResult"></div>
+            </div>
+
+            <div>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" th:field="*{password}" placeholder="Enter password" required>
+            </div>
+
+            <div>
+                <button type="submit" id="submitButton" disabled>Submit</button>
+            </div>
+        </form>
+    </div>
+    <hr>
+</main>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+<script>
+    function checkUsername() {
+        const username = document.getElementById('username').value;
+        const submitButton = document.getElementById('submitButton');
+
+        fetch('/check-username', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: username })
+        })
+            .then(response => response.json())
+            .then(data => {
+                const resultElement = document.getElementById('usernameCheckResult');
+                if (data) {
+                    resultElement.textContent = 'Username is available.';
+                    resultElement.style.color = 'green';
+                    submitButton.disabled = false;
+                } else {
+                    resultElement.textContent = 'Username is already taken.';
+                    resultElement.style.color = 'red';
+                    submitButton.disabled = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header.navbar {
+    border-bottom: 1px solid #ddd;
+    padding: 0.5rem 1rem;
+}
+
+header .navbar-brand {
+    font-weight: bold;
+    color: #333;
+}
+
+header .nav-link {
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+header .nav-link:hover {
+    color: #007bff;
+}
+
+footer.footer {
+    background-color: #f8f9fa;
+    font-size: 0.9rem;
+    border-top: 1px solid #ddd;
+}
+
+footer p {
+    margin: 0;
+    color: #555;
+}

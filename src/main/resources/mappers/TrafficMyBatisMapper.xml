@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="fourman.project1.repository.traffic.TrafficMyBatisMapper">
+
+    <select id="findTraffics"
+            resultType="fourman.project1.domain.traffic.Traffic">
+
+        SELECT * FROM traffics WHERE deleted_at IS NULL;
+    </select>
+
+    <select id="findTrafficById"
+            resultType="fourman.project1.domain.traffic.Traffic">
+
+            SELECT * FROM traffics
+            WHERE traffic_id = #{trafficId}
+            AND deleted_at IS NULL;
+    </select>
+
+    <insert id="createTraffic"
+            parameterType="fourman.project1.domain.traffic.Traffic"
+            keyProperty="trafficId" keyColumn="traffic_id"
+            useGeneratedKeys="true">
+
+        INSERT INTO traffics (
+            url, vus, duration, rps, user_id, board_id,     created_at, updated_at, deleted_at)
+        VALUES (
+            #{url}, #{vus}, #{duration}, #{rps}, #{user.userId}, #{board.boardId},
+            #{createdAt}, #{updatedAt}, #{deletedAt});
+    </insert>
+
+    <update id="setTrafficUrl">
+        UPDATE traffics SET url = #{url} WHERE traffic_id = #{id}
+    </update>
+
+    <delete id="forceDeleteTrafficDueToError">
+        DELETE FROM traffics WHERE traffic_id = #{trafficId}
+    </delete>
+
+</mapper>
