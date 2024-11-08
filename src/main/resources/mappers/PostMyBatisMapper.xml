@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="fourman.project1.repository.post.PostMyBatisMapper">
+
+    <select id="findPosts" resultType="fourman.project1.domain.post.Post">
+        SELECT *
+        FROM posts
+        WHERE deleted_at IS NULL
+    </select>
+
+    <select id="findPostById" parameterType="long" resultType="fourman.project1.domain.post.Post">
+        SELECT *
+        FROM posts
+        WHERE post_id = #{postId} AND deleted_at IS NULL
+    </select>
+
+    <insert id="createPost" useGeneratedKeys="true"
+            parameterType="fourman.project1.domain.post.Post"
+            keyProperty="postId" keyColumn="post_id">
+        INSERT INTO posts (title, body, user_id, board_id)
+        VALUES (#{title}, #{body}, #{user.userId}, #{board.boardId})
+    </insert>
+    
+    <update id="updatePost" parameterType="fourman.project1.domain.post.Post">
+        UPDATE posts
+        SET title = #{title}, body = #{body}
+        WHERE post_id = #{postId}
+    </update>
+
+    <update id="deletePost" parameterType="long">
+        UPDATE posts
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE post_id = #{postId}
+    </update>
+
+</mapper>

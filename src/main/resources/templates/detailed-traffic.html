@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{fragments/header :: head}"></head>
+</head>
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<main class="container-fluid">
+
+    <section class="container full-width" style="text-align: center;">
+        <h1 class="page-title"  th:text="'Configured Traffic and Load Duration Settings'"></h1>
+    </section>
+
+    <section class="container" style="text-align: center">
+        <h1 class="page-title" th:text="'User Actions'">Welcome to FORMAN BY FOURMAN</h1>
+        <p class="page-description" th:text="'Perform actions like refresh and form submission'"></p>
+    </section>
+
+    <section class="row">
+        <section class="col-6 d-flex flex-column justify-content-center align-items-end text-start">
+            <div>
+                <form>
+                    <label>Traffic Load</label>
+                    <input class="form-control mb-4" type="text" name="interval" placeholder="Enter interval" style=" width: 500px;">
+                </form>
+            </div>
+        </section>
+
+        <section class="col-6">
+            <div>
+                <form>
+                    <div>
+                        <label>Select Action</label><br>
+                        <button type="button" class="btn btn-secondary btnsz">Submit</button>
+                        <button type="button" class="btn btn-secondary btnsz">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </section>
+    <section class="container" style="text-align: center">
+        <button type="button" class="btn btn-custom btnsz">Submit</button>
+    </section>
+
+</main>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

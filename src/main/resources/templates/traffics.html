@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{fragments/header :: head}">
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column; /* 수직 정렬 */
+      align-items: center;
+      max-width: 600px;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<main class="container-fluid">
+  <!-- 페이지별 콘텐츠가 들어갈 자리 -->
+  <section class="container" style="text-align: center">
+    <h1 class="page-title" th:text="'Create New Test Post'">Welcome to FORMAN BY FOURMAN</h1>
+    <p class="page-description" th:text="'Click the button below to create a new test post'"></p>
+    <a class="btn btn-dark" type="button" th:href="@{/traffics/create}">Create Post</a><br><br><br>
+  </section>
+
+  <section class="row">
+    <section class="col-6 d-flex flex-column justify-content-center align-items-center text-start">
+      <h1 class="page-title" style="font-weight: bold">Existing Test Posts</h1>
+    </section>
+
+    <section class="col-6">
+      <table class="table" style="width: 80%;">
+        <thead class="table-dark">
+        <tr>
+          <th>테스트 번호</th>
+          <th>테스트 결과</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${traffics.isEmpty()}">
+          <td colspan="6">테스트 게시글이 없습니다.</td>
+        </tr>
+        <tr th:each="traffic : ${traffics}">
+          <td th:text="${traffic.trafficId}">1</td>
+          <td><a th:href="@{/traffics/{id}(id=${traffic.trafficId})}" th:text="${traffic.vus}">vus</a></td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+  </section>
+
+
+
+</main>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

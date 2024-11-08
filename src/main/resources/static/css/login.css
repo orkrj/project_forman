@@ -1,0 +1,97 @@
+.login-page .container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    max-width: 80%;
+    margin-top: 150px !important;
+}
+
+.login-page .left {
+    width: 40%;
+    font-size: 24px;
+    margin-right: 20px;
+}
+
+.login-page .right {
+    width: 50%;
+    margin-top: -50px;
+    margin-right: 50px;
+}
+
+.login-page h1 {
+    color: black;
+    font-weight: 900;
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+
+.login-page p {
+    margin-top: 20px;
+    font-size: 1em;
+    color: #666;
+}
+
+
+.login-page a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.login-page a:hover {
+    text-decoration: underline;
+}
+
+
+.login-page label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.login-page .username-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.login-page input[type="text"],
+.login-page input[type="password"] {
+    padding: 8px;
+    box-sizing: border-box;
+    height: 36px;
+    margin-bottom: 10px;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.login-page button[type="submit"] {
+    padding: 10px 20px;
+    color: white;
+    background-color: black;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    width: 50%;
+    box-sizing: border-box;
+}
+
+.login-page button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.login-page button[type="submit"]:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.login-page header {
+    border-bottom: 2px solid #ccc;
+}
