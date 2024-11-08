@@ -5,6 +5,7 @@ import fourman.project1.domain.post.PostRequestDto;
 import fourman.project1.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ public class PostService {
         return postRepository.findPostById(id).orElseThrow(null);
     }
 
+    @Transactional
     public void createPost(Post post) {
 //        Post post = new Post();
 //        post.setTitle(postRequestDto.getTitle());
@@ -30,6 +32,7 @@ public class PostService {
         postRepository.createPost(post);
     }
 
+    @Transactional
     public void updatePost(Post post) {
         Post findPost = postRepository.findPostById(post.getPostId()).orElse(null);
 
@@ -41,6 +44,7 @@ public class PostService {
         postRepository.updatePost(findPost);
     }
 
+    @Transactional
     public void deletePost(Long id) {
         postRepository.deletePost(id);
     }

@@ -64,7 +64,8 @@ public class PostController {
 
         // Post 생성 및 할당
         // postRequestDto -> post 매퍼가 에러가 나서 급한대로 static from 메서드 만든 거예요!
-        Post post = Post.from(postRequestDto);
+//        Post post = Post.from(postRequestDto);
+        Post post = postMapper.postRequestDtoToPost(postRequestDto);
         post.setUser(findUser);
         post.setBoard(findBoard);
 

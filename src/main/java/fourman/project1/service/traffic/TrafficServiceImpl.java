@@ -46,7 +46,7 @@ public class TrafficServiceImpl implements TrafficService {
         trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
 
         log.info("traffic url: {}", trafficUrl);
-        String SCRIPT_PATH = "/Users/zun/Lecture/Elice/Cloud/project1/k6/script.js";
+        String SCRIPT_PATH = "/Users/aljae/Study/Elice/Projects/fourman-project/k6/script.js";
 
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(
