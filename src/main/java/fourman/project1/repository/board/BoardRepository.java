@@ -15,19 +15,4 @@ public class BoardRepository {
     public List<Board> findBoards() {
         return boardMyBatisMapper.findBoards();
     }
-
-    public Optional<Board> findBoardById(Long boardId) {
-        return boardMyBatisMapper.findBoardById(boardId);
-    }
-
-    public void createBoard(Board board) {
-        boardMyBatisMapper.createBoard(board);
-    }
-
-    public void updateBoard(Board board) {
-        boardMyBatisMapper.updateBoard(board);
-    }
-    public void deleteBoard(Long boardId) {
-        boardMyBatisMapper.deleteBoard(boardId);
-    }
 }

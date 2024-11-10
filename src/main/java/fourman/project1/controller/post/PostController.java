@@ -28,22 +28,14 @@ public class PostController {
 
     @GetMapping
     public String findPosts(Model model) {
-        // Posts 찾기
         List<Post> posts = postService.findPosts();
-
-        log.info("find posts.size() ={}", posts.size());
-
         model.addAttribute("posts", posts);
         return "posts";
     }
 
     @GetMapping("/{postId}")
     public String findPostById(@PathVariable Long postId, Model model) {
-        // Post 찾기
         Post post = postService.findPostById(postId);
-
-        log.info("findPostById() findPost={}, {}", post.getTitle(), post.getBody());
-
         model.addAttribute("post", post);
         return "detailed-post";
     }
@@ -58,17 +50,13 @@ public class PostController {
                              @ModelAttribute TrafficRequestDto testRequestDto,
                              Model model, RedirectAttributes redirectAttributes) {
 
-        // User와 Board 찾기
-        User findUser = new User(); // userService.findByUserId();
-        Board findBoard = new Board(); // boardService.findByBoardId();
+        User findUser = new User();
+        Board findBoard = new Board();
 
-        // Post 생성 및 할당
-        // postRequestDto -> post 매퍼가 에러가 나서 급한대로 static from 메서드 만든 거예요!
         Post post = Post.from(postRequestDto);
         post.setUser(findUser);
         post.setBoard(findBoard);
 
-        // post 저장 및 응답
         postService.createPost(post);
         PostResponseDto postResponseDto = postMapper.postToPostResponseDto(post);
 
@@ -78,31 +66,22 @@ public class PostController {
     @PatchMapping("/{postId}")
     public String updatePost(@PathVariable Long postId, @ModelAttribute PostRequestDto postRequestDto, Model model) {
 
-        // User 찾기
-        User findUser = new User();//        userService.findByUserId();
-        // Board 찾기
-        Board findBoard = new Board(); // boardService.findByBoardId();
+        User findUser = new User();
+        Board findBoard = new Board();
 
-        // Post로 매핑
         Post post = postMapper.postRequestDtoToPost(postRequestDto);
         post.setPostId(postId);
         post.setUser(findUser);
         post.setBoard(findBoard);
 
-        // Post 업데이트
         postService.updatePost(post);
-        log.info("updatePost() post={} , {}", post.getTitle(), post.getBody());
-
-        // PostResponseDto 로 매핑
         PostResponseDto postResponseDto = postMapper.postToPostResponseDto(post);
 
-        // model.addAttribute("post", postResponseDto);
         return "redirect:/";
     }
 
     @DeleteMapping("/{postId}")
     public String deletePost(@PathVariable Long postId) {
-        // Post 삭제
         postService.deletePost(postId);
         return "redirect:/";
     }

@@ -13,8 +13,6 @@ import java.util.List;
 public class Board {
     private Long boardId;
 
-    private String boardname;
-
     private List<Post> posts;
 }
 

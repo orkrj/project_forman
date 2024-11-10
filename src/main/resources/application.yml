@@ -1,4 +1,7 @@
 spring:
+  config:
+    import: path.yml
+
   datasource:
     url: jdbc:mysql://localhost:3306/fourman-project
     username: fourman

@@ -12,6 +12,5 @@ import java.util.List;
 @Builder
 public class BoardResponseDto {
     private Long boardId;
-    private String boardname;
     private List<Post> posts;
 }
