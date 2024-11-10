@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Controller
@@ -33,9 +34,7 @@ public class TrafficController {
 
     @GetMapping("/{trafficId}")
     public String findTrafficById(@PathVariable Long trafficId, Model model) {
-        model.addAttribute("traffic",
-                trafficMapper.trafficToTrafficResponseDto(trafficService.findTrafficById(trafficId))
-        );
+                trafficMapper.trafficToTrafficResponseDto(trafficService.findTrafficById(trafficId));
         return "detailed-traffic";
     }
 
@@ -47,14 +46,12 @@ public class TrafficController {
     @PostMapping("/create")
     public String createTraffic(@ModelAttribute TrafficRequestDto trafficRequestDto, Model model) {
 
-        trafficService.createTraffic(Traffic.from(trafficRequestDto));
+        CompletableFuture<Long> trafficId = trafficService.createTraffic(Traffic.from(trafficRequestDto));
         model.addAttribute(
                 "traffic",
                 trafficMapper.trafficRequestDtoToTrafficResponseDto(trafficRequestDto)
         );
 
-        return "redirect:/traffics";
+        return "redirect:/traffics/" + trafficId;
     }
-
-
 }

@@ -24,9 +24,6 @@ public class PostService {
     }
 
     public void createPost(Post post) {
-//        Post post = new Post();
-//        post.setTitle(postRequestDto.getTitle());
-//        post.setBody(postRequestDto.getBody());
         postRepository.createPost(post);
     }
 
@@ -34,8 +31,8 @@ public class PostService {
         Post findPost = postRepository.findPostById(post.getPostId()).orElse(null);
 
         if (findPost != null) {
-            Optional.ofNullable(post.getTitle()).ifPresent(title -> findPost.setTitle(title));
-            Optional.ofNullable(post.getBody()).ifPresent(body -> findPost.setBody(body));
+            Optional.ofNullable(post.getTitle()).ifPresent(findPost::setTitle);
+            Optional.ofNullable(post.getBody()).ifPresent(findPost::setBody);
         }
 
         postRepository.updatePost(findPost);

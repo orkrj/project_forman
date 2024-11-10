@@ -1,0 +1,8 @@
+path:
+  k6: /opt/homebrew/bin/k6
+  script: /Users/zun/Lecture/Elice/Cloud/project1/k6/script.js
+
+  url:
+    local: http://localhost:8080
+
+
