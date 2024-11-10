@@ -17,13 +17,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println(username);
         User user =userRepository.findByUsername(username);
-        System.out.println("Stored password for username " + username + ": " + user.getPassword());
         if(user != null) {
             return new CustomUserDetails(user);
         }
-
         throw new UsernameNotFoundException("유저를 찾을 수 없습니다. " + username);
     }
 }

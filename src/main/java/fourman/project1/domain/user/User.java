@@ -1,18 +1,15 @@
 package fourman.project1.domain.user;
 
 import fourman.project1.domain.post.Post;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User {
 
     private Long userId;
@@ -28,4 +25,12 @@ public class User {
     private ZonedDateTime updatedAt;
 
     private ZonedDateTime deletedAt;
+
+
+    @Builder
+    public User(String username, String password){
+        this.username = username;
+        this.password = password;
+    }
+
 }
