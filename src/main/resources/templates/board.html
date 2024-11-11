@@ -43,7 +43,8 @@
             <div class="card card-post">
                 <img src="product_image_url" class="card-img-top" alt="Product Image">
                 <div class="card-body">
-                    <h6 class="card-subtitle text-muted">APPLE 아이맥스</h6>
+                    <h6 class="card-subtitle text-muted"
+                        th:text="${randomPosts != null && randomPosts.size() > 0 && randomPosts[0] != null? randomPosts[0].title : '게시글이 없습니다.'}">APPLE 아이맥스</h6>
                 </div>
             </div>
         </div>
@@ -51,7 +52,8 @@
             <div class="card card-post">
                 <img src="product_image_url" class="card-img-top" alt="Product Image">
                 <div class="card-body">
-                    <h6 class="card-subtitle text-muted">동탄역 롯데캐슬</h6>
+                    <h6 class="card-subtitle text-muted"
+                        th:text="${randomPosts != null && randomPosts.size() > 0 && randomPosts[1] != null? randomPosts[1].title : '게시글이 없습니다.'}">동탄역 롯데캐슬</h6>
                 </div>
             </div>
         </div>
@@ -59,7 +61,8 @@
             <div class="card card-post">
                 <img src="product_image_url" class="card-img-top" alt="Product Image">
                 <div class="card-body">
-                    <h6 class="card-subtitle text-muted">Nike X Sacai</h6>
+                    <h6 class="card-subtitle text-muted"
+                        th:text="${randomPosts != null && randomPosts.size() > 0 && randomPosts[2] != null? randomPosts[2].title : '게시글이 없습니다.'}">Nike X Sacai</h6>
                 </div>
             </div>
         </div>

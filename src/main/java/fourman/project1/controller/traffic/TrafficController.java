@@ -55,4 +55,3 @@ public class TrafficController {
         return "redirect:/traffics";
     }
 }
-d
