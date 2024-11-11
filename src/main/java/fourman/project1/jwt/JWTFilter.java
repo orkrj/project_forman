@@ -30,11 +30,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 쿠키에서 JWT 토큰 추출
         Cookie[] cookies = request.getCookies();
-        String token = Arrays.stream(cookies)
-                .filter(cookie -> "auth_token".equals(cookie.getName()))
-                .map(Cookie::getValue)
-                .findFirst()
-                .orElse(null);
+        String token = null;
+        if (cookies != null) {
+            token = Arrays.stream(cookies)
+                    .filter(cookie -> "auth_token".equals(cookie.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
+        }
 
         // 토큰이 없으면, 필터 체인 계속 진행
         if (token == null) {
