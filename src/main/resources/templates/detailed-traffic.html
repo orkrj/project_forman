@@ -21,7 +21,7 @@
         <section class="col-6 d-flex flex-column justify-content-center align-items-end text-start">
             <div>
                 <form>
-                    <label>Traffic Load</label>
+                    <label>Post Anything</label>
                     <input class="form-control mb-4" type="text" name="interval" placeholder="Enter interval" style=" width: 500px;">
                 </form>
             </div>
@@ -40,7 +40,7 @@
         </section>
     </section>
     <section class="container" style="text-align: center">
-        <button type="button" class="btn btn-custom btnsz">Submit</button>
+        <button th:href="@{/trafffics/{id}(id=${trafficId})}" type="button" class="btn btn-custom btnsz">Refresh</button>
     </section>
 
 </main>
