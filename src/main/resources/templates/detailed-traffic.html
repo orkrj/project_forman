@@ -32,15 +32,23 @@
                 <form>
                     <div>
                         <label>Select Action</label><br>
-                        <button type="button" class="btn btn-secondary btnsz">Submit</button>
-                        <button type="button" class="btn btn-secondary btnsz">Cancel</button>
+                        <div class="select-box" style="display: flex; gap: 10px; align-items: center;">
+                            <form method="post">
+                                <button type="submit" class="btn btn-secondary btnsz">Submit</button>
+                            </form>
+                            <form method="get" th:action="@{/traffics}">
+                                <button type="submit" class="btn btn-secondary btnsz">Cancel</button>
+                            </form>
+                        </div>
                     </div>
                 </form>
             </div>
         </section>
     </section>
     <section class="container" style="text-align: center">
-        <button th:href="@{/trafffics/{id}(id=${trafficId})}" type="button" class="btn btn-custom btnsz">Refresh</button>
+        <form method="get" th:action="@{/traffics/{id}(id=${traffic.trafficId})}">
+            <button type="submit" class="btn btn-custom btnsz">Refresh</button>
+        </form>
     </section>
 
 </main>
