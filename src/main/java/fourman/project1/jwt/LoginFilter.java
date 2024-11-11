@@ -58,9 +58,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     // 로그인 실패시 실행하는  메소드
     @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest req, HttpServletResponse res, AuthenticationException failed){
+    protected void unsuccessfulAuthentication(HttpServletRequest req, HttpServletResponse res, AuthenticationException failed) throws IOException {
         res.setStatus(401);
+        res.sendRedirect("/login?error=true");
     }
+
+
 
 
 
