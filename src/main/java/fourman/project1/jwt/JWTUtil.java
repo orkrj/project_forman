@@ -32,7 +32,6 @@ public class  JWTUtil {
 
     public String createJwt(String username,  Long expiredMs) {
 
-        System.out.println(username);
         return Jwts.builder()
                 .claim("username",username)
                 .issuedAt(new Date(System.currentTimeMillis())) // 토큰 생성 시간

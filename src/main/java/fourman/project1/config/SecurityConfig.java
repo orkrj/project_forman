@@ -3,6 +3,7 @@ package fourman.project1.config;
 import fourman.project1.jwt.JWTFilter;
 import fourman.project1.jwt.JWTUtil;
 import fourman.project1.jwt.LoginFilter;
+import fourman.project1.jwt.CustomLogoutFilter;
 import fourman.project1.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,9 +16,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
-// @EnableWebSecurity // 잠시 비활성화
+//@EnableWebSecurity // 잠시 비활성화
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -54,7 +56,7 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        // .requestMatchers("/login", "/", "/join", "/check-username","/home").permitAll()
+//                        .requestMatchers("/login", "/", "/join", "/check-username","/home", "/css/**").permitAll()
                         .requestMatchers("/**").permitAll()
                         .anyRequest().permitAll());
 //                        .anyRequest().authenticated());
@@ -64,6 +66,8 @@ public class SecurityConfig {
 
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http
+                .addFilterBefore(new CustomLogoutFilter(), LogoutFilter.class);
 
         //세션 설정
         http

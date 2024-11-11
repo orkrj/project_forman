@@ -46,14 +46,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         // 토큰을 쿠키에 담기
         Cookie cookie = new Cookie("auth_token", token);
-        cookie.setHttpOnly(true);  // 클라이언트에서 자바스크립트로 접근 불가
-        cookie.setSecure(false);    // HTTPS 연결에서만 사용
-        cookie.setPath("/");       // 쿠키가 유효한 경로 설정
-        cookie.setMaxAge(60 * 60 * 10);  // 쿠키 만료 시간 설정 (예: 10시간)
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 10);
 
         res.addCookie(cookie);
         res.addHeader("Authorization","Bearer "+ token);
-        res.sendRedirect("/home");
+        res.sendRedirect("/boards");
     }
 
     // 로그인 실패시 실행하는  메소드
