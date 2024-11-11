@@ -20,7 +20,6 @@ import java.util.List;
 @RequestMapping("/posts")
 @Controller
 @RequiredArgsConstructor
-@Slf4j
 public class PostController {
 
     private final PostService postService;
@@ -31,8 +30,6 @@ public class PostController {
         // Posts 찾기
         List<Post> posts = postService.findPosts();
 
-        log.info("find posts.size() ={}", posts.size());
-
         model.addAttribute("posts", posts);
         return "posts";
     }
@@ -41,8 +38,6 @@ public class PostController {
     public String findPostById(@PathVariable Long postId, Model model) {
         // Post 찾기
         Post post = postService.findPostById(postId);
-
-        log.info("findPostById() findPost={}, {}", post.getTitle(), post.getBody());
 
         model.addAttribute("post", post);
         return "detailed-post";
@@ -92,7 +87,6 @@ public class PostController {
 
         // Post 업데이트
         postService.updatePost(post);
-        log.info("updatePost() post={} , {}", post.getTitle(), post.getBody());
 
         // PostResponseDto 로 매핑
         PostResponseDto postResponseDto = postMapper.postToPostResponseDto(post);
