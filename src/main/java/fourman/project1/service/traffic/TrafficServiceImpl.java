@@ -55,35 +55,37 @@ public class TrafficServiceImpl implements TrafficService {
         traffic.setUrl(trafficUrl);
         trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
 
-        log.info("traffic url: {}", trafficUrl);
+        CompletableFuture.runAsync(() -> {
+            trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
 
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder(
-                    k6Path, "run",
-                    "--vus", String.valueOf(traffic.getVus()),
-                    "--duration", traffic.getDuration(),
-                    "--env", "TARGET_URL=" + traffic.getUrl(),
-                    scriptPath
-            );
-            processBuilder.redirectErrorStream(true);
-            Process process = processBuilder.start();
+            try {
+                ProcessBuilder processBuilder = new ProcessBuilder(
+                        k6Path, "run",
+                        "--vus", String.valueOf(traffic.getVus()),
+                        "--duration", traffic.getDuration(),
+                        "--env", "TARGET_URL=" + traffic.getUrl(),
+                        scriptPath
+                );
+                processBuilder.redirectErrorStream(true);
+                Process process = processBuilder.start();
 
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    log.info(line);
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        log.info(line);
+                    }
                 }
-            }
 
-            int exitCode = process.waitFor();
-            if (exitCode != 0) {
-                throw new TrafficK6CmdErrorException("execution failed with exit code: " + exitCode);
-            }
+                int exitCode = process.waitFor();
+                if (exitCode != 0) {
+                    throw new TrafficK6CmdErrorException("execution failed with exit code: " + exitCode);
+                }
 
-        } catch (IOException | InterruptedException e) {
-            trafficMyBatisMapper.forceDeleteTrafficDueToError(traffic.getTrafficId());
-            throw new TrafficK6CmdErrorException(e);
-        }
+            } catch (IOException | InterruptedException e) {
+                trafficMyBatisMapper.forceDeleteTrafficDueToError(traffic.getTrafficId());
+                throw new TrafficK6CmdErrorException(e);
+            }
+        });
 
         return CompletableFuture.completedFuture(trafficId);
     }
