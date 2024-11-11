@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{fragments/header :: head}">
-
-    <title>join</title>
+    <title>Join</title>
     <link rel="stylesheet" href="/css/join.css">
 </head>
 <body class="join-page">
@@ -16,22 +15,26 @@
     </div>
 
     <div class="right">
-        <form th:action="@{/join}" method="post" th:object="${userSignUpRequestDto}">
+        <form th:action="@{/join}" method="post" th:object="${userSignUpRequestDto}" onsubmit="return validateForm()">
+            <!-- Username 입력 필드 -->
             <div>
-                <label for="username">Username:</label>
-
+                <label for="username">Username</label>
                 <div class="username-container">
-                    <input type="text" id="username" name="username" th:field="*{username}" placeholder="Enter username" required>
+                    <input type="text" id="username" name="username" th:field="*{username}" placeholder="4~10자 사이로 입력해 주세요." required minlength="4" maxlength="10" pattern="^[^\s]+$" title="Username should be between 4 and 10 characters and cannot have spaces.">
                     <button type="button" onclick="checkUsername()">Check Availability</button>
                 </div>
                 <div id="usernameCheckResult"></div>
+                <div class="error-message" id="usernameErrorMessage" style="color:red; display:none;">Username must be between 4 and 10 characters and cannot contain spaces.</div>
             </div>
 
+            <!-- Password 입력 필드 -->
             <div>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" th:field="*{password}" placeholder="Enter password" required>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" th:field="*{password}" placeholder="6~12자 사이로 입력해 주세요." required minlength="6" maxlength="12" pattern="^[^\s]+$" title="Password should be between 6 and 12 characters and cannot have spaces.">
+                <div class="error-message" id="passwordErrorMessage" style="color:red; display:none;">Password must be between 6 and 12 characters and cannot contain spaces.</div>
             </div>
 
+            <!-- 제출 버튼 -->
             <div>
                 <button type="submit" id="submitButton" disabled>Submit</button>
             </div>
@@ -43,6 +46,7 @@
 <div th:insert="~{fragments/footer :: footer}"></div>
 
 <script>
+    // 아이디 중복 확인 함수
     function checkUsername() {
         const username = document.getElementById('username').value;
         const submitButton = document.getElementById('submitButton');
@@ -70,6 +74,32 @@
             .catch(error => {
                 console.error('Error:', error);
             });
+    }
+
+    // 폼 유효성 검사
+    function validateForm() {
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        const usernameErrorMessage = document.getElementById('usernameErrorMessage');
+        const passwordErrorMessage = document.getElementById('passwordErrorMessage');
+
+        const usernameValid = username.value.length >= 4 && username.value.length <= 10 && !/\s/.test(username.value);
+        if (!usernameValid) {
+            usernameErrorMessage.style.display = 'block';
+            return false;
+        } else {
+            usernameErrorMessage.style.display = 'none';
+        }
+
+        const passwordValid = password.value.length >= 6 && password.value.length <= 12 && !/\s/.test(password.value);
+        if (!passwordValid) {
+            passwordErrorMessage.style.display = 'block';
+            return false;
+        } else {
+            passwordErrorMessage.style.display = 'none';
+        }
+
+        return true; // 모든 유효성 검사를 통과하면 폼 제출
     }
 </script>
 
