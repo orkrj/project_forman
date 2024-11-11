@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -45,13 +47,21 @@ public class PostController {
 
     @GetMapping("/create")
     public String createPost(Model model) {
+        model.addAttribute("postRequestDto", new PostRequestDto());
         return "create-post";
     }
 
     @PostMapping("/create")
-    public String createPost(@ModelAttribute PostRequestDto postRequestDto,
+    public String createPost(@Validated @ModelAttribute PostRequestDto postRequestDto,
+                             BindingResult bindingResult,
                              @ModelAttribute TrafficRequestDto testRequestDto,
                              Model model, RedirectAttributes redirectAttributes) {
+
+        // 바인딩 에러시
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("postRequestDto", postRequestDto);
+            return "create-post";
+        }
 
         // User와 Board 찾기
         User findUser = new User(); // userService.findByUserId();
@@ -61,6 +71,7 @@ public class PostController {
         // postRequestDto -> post 매퍼가 에러가 나서 급한대로 static from 메서드 만든 거예요!
 //        Post post = Post.from(postRequestDto);
         Post post = postMapper.postRequestDtoToPost(postRequestDto);
+
         post.setUser(findUser);
         post.setBoard(findBoard);
 
@@ -72,7 +83,9 @@ public class PostController {
     }
 
     @PatchMapping("/{postId}")
-    public String updatePost(@PathVariable Long postId, @ModelAttribute PostRequestDto postRequestDto, Model model) {
+    public String updatePost(@PathVariable Long postId,
+                             @Validated @ModelAttribute PostRequestDto postRequestDto,
+                             BindingResult bindingResult, Model model) {
 
         // User 찾기
         User findUser = new User();//        userService.findByUserId();
