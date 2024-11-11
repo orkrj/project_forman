@@ -34,7 +34,11 @@ public class TrafficController {
 
     @GetMapping("/{trafficId}")
     public String findTrafficById(@PathVariable Long trafficId, Model model) {
-                trafficMapper.trafficToTrafficResponseDto(trafficService.findTrafficById(trafficId));
+                model.addAttribute(
+                        "traffic",
+                        trafficMapper.trafficToTrafficResponseDto(trafficService.findTrafficById(trafficId))
+                );
+
         return "detailed-traffic";
     }
 
@@ -52,7 +56,6 @@ public class TrafficController {
                 trafficMapper.trafficRequestDtoToTrafficResponseDto(trafficRequestDto)
         );
 
-        return "redirect:/traffics";
+        return "redirect:/traffics/" + trafficId.join();
     }
 }
-d
