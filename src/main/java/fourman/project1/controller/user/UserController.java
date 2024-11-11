@@ -21,12 +21,16 @@ public class UserController {
     @GetMapping("/join")
     public String join(Model model) {
         model.addAttribute("userSignUpRequestDto", new UserSignUpRequestDto());
+
         return "/user/join";
     }
 
     @PostMapping("/join")
     public String signUp(@ModelAttribute UserSignUpRequestDto userSignUpRequestDto) {
-        User user = userMapper.toEntity(userSignUpRequestDto);
+        User user = User.builder()
+                .username(userSignUpRequestDto.getUsername())
+                .password(userSignUpRequestDto.getPassword())
+                .build();
 
         userService.signUp(user);
         return "redirect:/login";

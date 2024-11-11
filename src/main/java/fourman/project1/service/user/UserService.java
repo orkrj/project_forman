@@ -18,10 +18,12 @@ public class UserService  {
 
         public void signUp(User user) {
 
+            User newUser = User.builder()
+                    .username(user.getUsername())
+                    .password(bCryptPasswordEncoder.encode(user.getPassword()))
+                    .build();
 
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            user.setCreatedAt(ZonedDateTime.now());
-            userRepository.save(user);
+            userRepository.save(newUser);
         }
 
     public boolean isUsernameAvailable(String username) {
