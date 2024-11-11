@@ -10,7 +10,6 @@ public class TrafficK6CmdErrorException extends RuntimeException{
         super(message);
     }
 
-
     public TrafficK6CmdErrorException(String message, Throwable cause) {
         super(message, cause);
     }
