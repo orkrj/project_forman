@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Mapper
 public interface BoardMyBatisMapper {
-    List<Board> findBoards(); // 전체 목록을 조회
-    Optional<Board> findBoardById(Long boardId); // 1건 조회
+    Board findBoardById(Long boardId); // 1건 조회
 }
