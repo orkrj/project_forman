@@ -52,6 +52,7 @@ public class TrafficController {
                 trafficMapper.trafficRequestDtoToTrafficResponseDto(trafficRequestDto)
         );
 
-        return "redirect:/traffics/" + trafficId;
+        return "redirect:/traffics";
     }
 }
+d

@@ -1,15 +1,71 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>FORMAN BY FOURMAN</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/board.css">
 </head>
 <body>
-    <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi aut cum dolorum, eligendi enim ex exercitationem iure laudantium maiores molestiae officia officiis porro quo quod quos, repellat, vitae voluptate
-    </p>
+<th:block th:replace="fragments/header :: header"></th:block>
+
+<div class="container text-center mt-5">
+    <h1>FOR MAN</h1>
+    <h2 class="mt-4">Test Feature</h2>
+    <p>Test your service at FORMAN</p>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card card-test">
+                <a th:href="@{/traffics/create}" style="text-decoration: none; color: inherit;">
+                    <div class="card-body">
+                        <h5 class="card-title">Quick Started</h5>
+                        <p class="card-text">Use the Test feature efficiently</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card card-test">
+                <a th:href="@{/traffics}" style="text-decoration: none; color: inherit;">
+                    <div class="card-body">
+                        <h5 class="card-title">Test History</h5>
+                        <p class="card-text">Check your tests</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-5">LIVE SERVICES</h3>
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card card-post">
+                <img src="product_image_url" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted">APPLE 아이맥스</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-post">
+                <img src="product_image_url" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted">동탄역 롯데캐슬</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-post">
+                <img src="product_image_url" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                    <h6 class="card-subtitle text-muted">Nike X Sacai</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="fragments/footer :: footer"></th:block>
 </body>
 </html>
