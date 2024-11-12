@@ -5,7 +5,7 @@ import fourman.project1.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 
 @Service
@@ -15,7 +15,7 @@ public class UserService  {
         private final BCryptPasswordEncoder bCryptPasswordEncoder;
         private final UserRepository userRepository;
 
-
+        @Transactional
         public void signUp(User user) {
 
             User newUser = User.builder()

@@ -32,6 +32,10 @@
       <div>
         <button type="submit">Login</button>
       </div>
+
+      <div th:if="${param.error}" style="color: red; font-weight: bold;">
+         아이디와 비밀번호를 다시 확인해주세요.
+      </div>
     </form>
   </div>
 </main>
