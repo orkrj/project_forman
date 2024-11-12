@@ -18,5 +18,7 @@ public interface TrafficMyBatisMapper {
 
     void setTrafficUrl(@Param("url") String trafficUrl, @Param("id") Long trafficId);
 
+    void setReqs(@Param("totalReq") Long totalReq, @Param("avgReq") Long avgReq, @Param("id") Long trafficId);
+
     void forceDeleteTrafficDueToError(Long trafficId);
 }

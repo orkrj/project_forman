@@ -35,6 +35,10 @@
         UPDATE traffics SET url = #{url} WHERE traffic_id = #{id}
     </update>
 
+    <update id="setReqs">
+        UPDATE traffics SET total_req = #{totalReq}, avg_req = #{avgReq} WHERE traffic_id = #{id}
+    </update>
+
     <delete id="forceDeleteTrafficDueToError">
         DELETE FROM traffics WHERE traffic_id = #{trafficId}
     </delete>
