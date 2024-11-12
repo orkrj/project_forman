@@ -14,7 +14,7 @@ public class TrafficResponseDto {
 
     private String duration;
 
-    private Long totalRqs;
+    private Long totalReq;
 
-    private Long avgRqs;
+    private Long avgReq;
 }
