@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Mapper
 public interface BoardMyBatisMapper {
-    Board findBoardById(Long boardId); // 1건 조회
+    Board findBoardById(Long boardId);
+
+    void createBoard(Board board);
 }

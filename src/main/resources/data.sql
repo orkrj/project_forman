@@ -1,0 +1,1 @@
+insert into boards (board_id) values (1);
