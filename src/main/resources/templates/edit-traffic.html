@@ -26,7 +26,7 @@
                     <div class="mb-3">
                         <label>Duration</label>
                         <input class="form-control mb-4 inputsz" type="text"
-                               th:value="${traffic.duration}" name="duration" placeholder="Enter duration">
+                               th:value="${traffic.duration.substring(0, traffic.duration.length() - 1)}" name="duration" placeholder="Enter duration">
                     </div>
                     <div>
                         <button type="submit" class="btn btn-lg btn-custom">Submit</button>

@@ -49,7 +49,7 @@ public class TrafficController {
         return "traffics";
     }
 
-    //== 가상 트래픽 요청을 위한 공개 url ==//
+    //== 권한이 필요 없는 조회 ==//
     @GetMapping("/vus/{trafficId}")
     public String findTrafficByIdPublic(@PathVariable Long trafficId, Model model) {
         model.addAttribute(
@@ -60,7 +60,7 @@ public class TrafficController {
         return "detailed-traffic";
     }
 
-    //== 권한 있을 때 수정 가능 ==//
+    //== 권한이 필요한 조회 ==//
     @GetMapping("/{trafficId}")
     public String findTrafficByIdPrivate(@PathVariable Long trafficId, Model model) {
         model.addAttribute(

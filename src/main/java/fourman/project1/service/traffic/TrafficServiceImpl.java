@@ -69,8 +69,8 @@ public class TrafficServiceImpl implements TrafficService {
 
         findTraffic.setVus(trafficRequestDto.getVus());
         findTraffic.setDuration(trafficRequestDto.getDuration() + "s");
-        trafficMyBatisMapper.updateTraffic(findTraffic);
         findTraffic.setUpdatedAt(ZonedDateTime.now());
+        trafficMyBatisMapper.updateTraffic(findTraffic);
 
         executeK6(findTraffic, findTraffic.getUrl(), trafficId);
     }
