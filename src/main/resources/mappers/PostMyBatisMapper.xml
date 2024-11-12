@@ -6,13 +6,13 @@
 <mapper namespace="fourman.project1.repository.post.PostMyBatisMapper">
 
     <select id="findPosts" resultType="fourman.project1.domain.post.Post">
-        SELECT *
+        SELECT post_id, title, body, user_id, board_id, created_at, updated_at, deleted_at
         FROM posts
         WHERE deleted_at IS NULL
     </select>
 
     <select id="findPostById" parameterType="long" resultType="fourman.project1.domain.post.Post">
-        SELECT *
+        SELECT post_id, title, body, user_id, board_id, created_at, updated_at, deleted_at
         FROM posts
         WHERE post_id = #{postId} AND deleted_at IS NULL
     </select>

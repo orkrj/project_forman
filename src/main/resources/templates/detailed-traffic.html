@@ -9,7 +9,7 @@
 <main class="container-fluid">
 
     <section class="container full-width" style="text-align: center;">
-        <h1 class="page-title"  th:text="'Configured Traffic and Load Duration Settings'"></h1>
+        <h1 class="page-title">Experience it as your users would!</h1>
     </section>
 
     <section class="container" style="text-align: center">
@@ -21,7 +21,7 @@
         <section class="col-6 d-flex flex-column justify-content-center align-items-end text-start">
             <div>
                 <form>
-                    <label>Traffic Load</label>
+                    <label>Post Anything</label>
                     <input class="form-control mb-4" type="text" name="interval" placeholder="Enter interval" style=" width: 500px;">
                 </form>
             </div>
@@ -32,15 +32,23 @@
                 <form>
                     <div>
                         <label>Select Action</label><br>
-                        <button type="button" class="btn btn-secondary btnsz">Submit</button>
-                        <button type="button" class="btn btn-secondary btnsz">Cancel</button>
+                        <div class="select-box" style="display: flex; gap: 10px; align-items: center;">
+                            <form method="post">
+                                <button type="submit" class="btn btn-secondary btnsz">Submit</button>
+                            </form>
+                            <form method="get" th:action="@{/traffics}">
+                                <button type="submit" class="btn btn-secondary btnsz">Cancel</button>
+                            </form>
+                        </div>
                     </div>
                 </form>
             </div>
         </section>
     </section>
     <section class="container" style="text-align: center">
-        <button type="button" class="btn btn-custom btnsz">Submit</button>
+        <form method="get" th:action="@{/traffics/{id}(id=${traffic.trafficId})}">
+            <button type="submit" class="btn btn-custom btnsz">Refresh</button>
+        </form>
     </section>
 
 </main>
