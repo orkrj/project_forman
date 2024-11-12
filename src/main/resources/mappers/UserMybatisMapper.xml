@@ -17,7 +17,7 @@
     </select>
 
     <select id="findByUsername" parameterType="java.lang.String" resultType="fourman.project1.domain.user.User">
-        SELECT username,password
+        SELECT user_id,username,password
         FROM users
         WHERE username = #{username}
     </select>
