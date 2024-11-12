@@ -30,13 +30,7 @@ public class TrafficController {
 
     @PostMapping("/create")
     public String createTraffic(@ModelAttribute TrafficRequestDto trafficRequestDto, Model model) {
-
         CompletableFuture<Long> trafficId = trafficService.createTraffic(Traffic.from(trafficRequestDto));
-        model.addAttribute(
-                "traffic",
-                trafficMapper.trafficRequestDtoToTrafficResponseDto(trafficRequestDto)
-        );
-
         return "redirect:/traffics/vus/" + trafficId.join();
     }
 
@@ -73,17 +67,9 @@ public class TrafficController {
 
     @PatchMapping("/{trafficId}")
     public String updateTraffic(
-            @PathVariable Long trafficId,
-            @ModelAttribute TrafficRequestDto trafficRequestDto,
-            Model model
+            @PathVariable Long trafficId, @ModelAttribute TrafficRequestDto trafficRequestDto
     ) {
-
         trafficService.updateTraffic(trafficId, trafficRequestDto);
-        model.addAttribute(
-                "traffic",
-                trafficMapper.trafficRequestDtoToTrafficResponseDto(trafficRequestDto)
-        );
-
         return "redirect:/traffics/vus/" + trafficId;
     }
 }
