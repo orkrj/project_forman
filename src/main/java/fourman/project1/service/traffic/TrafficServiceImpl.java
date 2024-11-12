@@ -53,7 +53,6 @@ public class TrafficServiceImpl implements TrafficService {
         String trafficUrl = localUrl + "/traffics/" + trafficId;
 
         traffic.setUrl(trafficUrl);
-        trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
 
         CompletableFuture.runAsync(() -> {
             trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
@@ -88,5 +87,13 @@ public class TrafficServiceImpl implements TrafficService {
         });
 
         return CompletableFuture.completedFuture(trafficId);
+    }
+
+    private void parseHttpReqs(String line, Traffic traffic) {
+        if (line.contains("http_req")) {
+            String[] httpReqs = line.split(":")[1].trim().split("\\s+");
+            String totalReqs = httpReqs[0];
+            String averageReqsPerSecond = httpReqs[1].split("\\.")[0];
+        }
     }
 }
