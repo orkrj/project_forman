@@ -93,25 +93,28 @@ public class TrafficServiceImpl implements TrafficService {
         return CompletableFuture.completedFuture(trafficId);
     }
 
-    private Traffic parseHttpReqs(String result, Traffic traffic) {
+    private void parseHttpReqs(String result, Traffic traffic) {
         String[] lines = result.split(System.lineSeparator());
+        boolean isFindHttpReqs = false;
+
         for (String line : lines) {
             if (line.contains("http_reqs")) {
                 String[] httpReqs = line.split(":")[1].trim().split("\\s+");
                 Long totalReq = Long.parseLong(httpReqs[0]);
                 Long averageReqPerSecond = Long.parseLong(httpReqs[1].split("\\.")[0]);
+                isFindHttpReqs = true;
 
-                return saveReqs(traffic, totalReq, averageReqPerSecond);
+                saveReqs(traffic, totalReq, averageReqPerSecond);
             }
         }
 
-        throw new TrafficNotFoundHttpReqs();
+        if (!isFindHttpReqs) {
+            throw new TrafficNotFoundHttpReqs();
+        }
     }
 
-    private Traffic saveReqs(Traffic traffic, Long totalReq, Long averageReqPerSecond) {
+    private void saveReqs(Traffic traffic, Long totalReq, Long averageReqPerSecond) {
         traffic.setReqs(totalReq, averageReqPerSecond);
         trafficMyBatisMapper.setReqs(totalReq, averageReqPerSecond, traffic.getTrafficId());
-
-        return traffic;
     }
 }
