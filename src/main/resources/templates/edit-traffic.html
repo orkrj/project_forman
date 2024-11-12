@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{fragments/header :: head}"></head>
+</head>
+<body>
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<main class="container-fluid">
+
+    <section class="row">
+        <section class="col-6 d-flex flex-column justify-content-center align-items-center text-start">
+            <h1 class="page-title" style="font-weight: bold">Configure Test Parameters</h1>
+            <p>Set traffic load and duration</p>
+        </section>
+
+        <section class="col-6">
+            <div>
+                <form th:action="@{/traffics/{id}(id=${traffic.trafficId})}" method="post">
+                    <input type="hidden" name="_method" value="patch">
+                    <div class="mb-3">
+                        <label>Traffic Load</label>
+                        <input class="form-control mb-4 inputsz" type="text"
+                               th:value="${traffic.vus}" name="vus" placeholder="Enter traffic load">
+                    </div>
+                    <div class="mb-3">
+                        <label>Duration</label>
+                        <input class="form-control mb-4 inputsz" type="text"
+                               th:value="${traffic.duration.substring(0, traffic.duration.length() - 1)}" name="duration" placeholder="Enter duration">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-lg btn-custom">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </section>
+
+</main>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

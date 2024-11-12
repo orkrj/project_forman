@@ -1,9 +1,10 @@
 package fourman.project1.service.traffic;
 
 import fourman.project1.domain.traffic.Traffic;
+import fourman.project1.domain.traffic.TrafficRequestDto;
 import fourman.project1.exception.traffic.TrafficK6CmdErrorException;
 import fourman.project1.exception.traffic.TrafficNotFoundException;
-import fourman.project1.exception.traffic.TrafficNotFoundHttpReqs;
+import fourman.project1.exception.traffic.TrafficNotFoundHttpReqsException;
 import fourman.project1.repository.traffic.TrafficMyBatisMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -51,10 +53,29 @@ public class TrafficServiceImpl implements TrafficService {
         trafficMyBatisMapper.createTraffic(traffic);
 
         Long trafficId = traffic.getTrafficId();
-        String trafficUrl = localUrl + "/traffics/" + trafficId;
+        String trafficUrl = localUrl + "/traffics/vus/" + trafficId;
 
         traffic.setUrl(trafficUrl);
 
+        executeK6(traffic, trafficUrl, trafficId);
+
+        return CompletableFuture.completedFuture(trafficId);
+    }
+
+    @Async
+    @Override
+    public void updateTraffic(Long trafficId, TrafficRequestDto trafficRequestDto) {
+        Traffic findTraffic = findTrafficById(trafficId);
+
+        findTraffic.setVus(trafficRequestDto.getVus());
+        findTraffic.setDuration(trafficRequestDto.getDuration() + "s");
+        findTraffic.setUpdatedAt(ZonedDateTime.now());
+        trafficMyBatisMapper.updateTraffic(findTraffic);
+
+        executeK6(findTraffic, findTraffic.getUrl(), trafficId);
+    }
+
+    private void executeK6(Traffic traffic, String trafficUrl, Long trafficId) {
         CompletableFuture.runAsync(() -> {
             trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
 
@@ -89,8 +110,6 @@ public class TrafficServiceImpl implements TrafficService {
                 throw new TrafficK6CmdErrorException(e);
             }
         });
-
-        return CompletableFuture.completedFuture(trafficId);
     }
 
     private void parseHttpReqs(String result, Traffic traffic) {
@@ -109,7 +128,7 @@ public class TrafficServiceImpl implements TrafficService {
         }
 
         if (!isFindHttpReqs) {
-            throw new TrafficNotFoundHttpReqs();
+            throw new TrafficNotFoundHttpReqsException();
         }
     }
 
