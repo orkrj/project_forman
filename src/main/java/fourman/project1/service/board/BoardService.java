@@ -18,7 +18,7 @@ public class BoardService {
         return boardRepository.findBoardById(boardId);
     }
 
-    public List<Integer> random() {
+    public List<Integer> randomPostIdx() {
         Board board = boardRepository.findBoardById((long) 1);
 
         List<Integer> idx = new ArrayList<>();

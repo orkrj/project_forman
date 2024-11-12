@@ -27,7 +27,7 @@ public class BoardController {
    public String findBoardById(Model model) {
       Board findBoard = boardService.findBoardById((long) 1);
 
-      List<Integer> randomIdx = boardService.random();
+      List<Integer> randomIdx = boardService.randomPostIdx();
 
       Post first = findBoard.getPosts().get(randomIdx.get(0));
       Post second = findBoard.getPosts().get(randomIdx.get(1));
