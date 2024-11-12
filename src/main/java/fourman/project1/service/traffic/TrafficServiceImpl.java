@@ -72,6 +72,7 @@ public class TrafficServiceImpl implements TrafficService {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         log.info(line);
+                        parseHttpReqs(line, traffic);
                     }
                 }
 
@@ -92,8 +93,10 @@ public class TrafficServiceImpl implements TrafficService {
     private void parseHttpReqs(String line, Traffic traffic) {
         if (line.contains("http_req")) {
             String[] httpReqs = line.split(":")[1].trim().split("\\s+");
-            String totalReqs = httpReqs[0];
-            String averageReqsPerSecond = httpReqs[1].split("\\.")[0];
+            Long totalReq = Long.parseLong(httpReqs[0]);
+            Long averageReqPerSecond = Long.parseLong(httpReqs[1].split("\\.")[0]);
+
+            traffic.setReqs(totalReq, averageReqPerSecond);
         }
     }
 }

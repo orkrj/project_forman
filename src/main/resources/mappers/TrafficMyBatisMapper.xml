@@ -25,9 +25,9 @@
             useGeneratedKeys="true">
 
         INSERT INTO traffics (
-            url, vus, duration, total_rqs, avg_rqs, user_id, board_id, created_at, updated_at, deleted_at)
+            url, vus, duration, total_req, avg_req, user_id, board_id, created_at, updated_at, deleted_at)
         VALUES (
-            #{url}, #{vus}, #{duration}, #{totalRqs}, #{avgRqs}, #{user.userId}, #{board.boardId},
+            #{url}, #{vus}, #{duration}, #{totalReq}, #{avgReq}, #{user.userId}, #{board.boardId},
             #{createdAt}, #{updatedAt}, #{deletedAt});
     </insert>
 
