@@ -31,6 +31,13 @@
             #{createdAt}, #{updatedAt}, #{deletedAt});
     </insert>
 
+    <update id="updateTraffic"
+            parameterType="fourman.project1.domain.traffic.Traffic">
+        UPDATE  traffics
+        SET vus = #{vus}, duration = #{duration}, updated_at = CURRENT_TIME
+        WHERE traffic_id = #{trafficId}
+    </update>
+
     <update id="setTrafficUrl">
         UPDATE traffics SET url = #{url} WHERE traffic_id = #{id}
     </update>

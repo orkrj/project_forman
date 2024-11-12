@@ -1,6 +1,7 @@
 package fourman.project1.service.traffic;
 
 import fourman.project1.domain.traffic.Traffic;
+import fourman.project1.domain.traffic.TrafficRequestDto;
 import fourman.project1.exception.traffic.TrafficK6CmdErrorException;
 import fourman.project1.exception.traffic.TrafficNotFoundException;
 import fourman.project1.exception.traffic.TrafficNotFoundHttpReqsException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -55,6 +57,25 @@ public class TrafficServiceImpl implements TrafficService {
 
         traffic.setUrl(trafficUrl);
 
+        executeK6(traffic, trafficUrl, trafficId);
+
+        return CompletableFuture.completedFuture(trafficId);
+    }
+
+    @Async
+    @Override
+    public void updateTraffic(Long trafficId, TrafficRequestDto trafficRequestDto) {
+        Traffic findTraffic = findTrafficById(trafficId);
+
+        findTraffic.setVus(trafficRequestDto.getVus());
+        findTraffic.setDuration(trafficRequestDto.getDuration() + "s");
+        trafficMyBatisMapper.updateTraffic(findTraffic);
+        findTraffic.setUpdatedAt(ZonedDateTime.now());
+
+        executeK6(findTraffic, findTraffic.getUrl(), trafficId);
+    }
+
+    private void executeK6(Traffic traffic, String trafficUrl, Long trafficId) {
         CompletableFuture.runAsync(() -> {
             trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
 
@@ -89,8 +110,6 @@ public class TrafficServiceImpl implements TrafficService {
                 throw new TrafficK6CmdErrorException(e);
             }
         });
-
-        return CompletableFuture.completedFuture(trafficId);
     }
 
     private void parseHttpReqs(String result, Traffic traffic) {

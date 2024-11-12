@@ -16,14 +16,17 @@
 
         <section class="col-6">
             <div>
-                <form method="post">
+                <form th:action="@{/traffics/{id}(id=${traffic.trafficId})}" method="post">
+                    <input type="hidden" name="_method" value="patch">
                     <div class="mb-3">
                         <label>Traffic Load</label>
-                        <input class="form-control mb-4 inputsz" type="text" name="vus" placeholder="Enter traffic load">
+                        <input class="form-control mb-4 inputsz" type="text"
+                               th:value="${traffic.vus}" name="vus" placeholder="Enter traffic load">
                     </div>
                     <div class="mb-3">
                         <label>Duration</label>
-                        <input class="form-control mb-4 inputsz" type="text" name="duration" placeholder="Enter duration">
+                        <input class="form-control mb-4 inputsz" type="text"
+                               th:value="${traffic.duration}" name="duration" placeholder="Enter duration">
                     </div>
                     <div>
                         <button type="submit" class="btn btn-lg btn-custom">Submit</button>
