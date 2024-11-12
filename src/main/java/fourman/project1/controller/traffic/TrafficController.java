@@ -33,11 +33,21 @@ public class TrafficController {
     }
 
     @GetMapping("/{trafficId}")
-    public String findTrafficById(@PathVariable Long trafficId, Model model) {
+    public String findTrafficByIdPrivate(@PathVariable Long trafficId, Model model) {
                 model.addAttribute(
                         "traffic",
                         trafficMapper.trafficToTrafficResponseDto(trafficService.findTrafficById(trafficId))
                 );
+
+        return "detailed-traffic";
+    }
+
+    @GetMapping("/vus/{trafficId}")
+    public String findTrafficByIdPublic(@PathVariable Long trafficId, Model model) {
+        model.addAttribute(
+                "traffic",
+                trafficMapper.trafficToTrafficResponseDto(trafficService.findTrafficById(trafficId))
+        );
 
         return "detailed-traffic";
     }
@@ -56,6 +66,8 @@ public class TrafficController {
                 trafficMapper.trafficRequestDtoToTrafficResponseDto(trafficRequestDto)
         );
 
-        return "redirect:/traffics/" + trafficId.join();
+        return "redirect:/traffics/vus/" + trafficId.join();
     }
+
+
 }

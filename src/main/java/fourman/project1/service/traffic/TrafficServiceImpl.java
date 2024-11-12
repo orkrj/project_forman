@@ -3,7 +3,7 @@ package fourman.project1.service.traffic;
 import fourman.project1.domain.traffic.Traffic;
 import fourman.project1.exception.traffic.TrafficK6CmdErrorException;
 import fourman.project1.exception.traffic.TrafficNotFoundException;
-import fourman.project1.exception.traffic.TrafficNotFoundHttpReqs;
+import fourman.project1.exception.traffic.TrafficNotFoundHttpReqsException;
 import fourman.project1.repository.traffic.TrafficMyBatisMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public class TrafficServiceImpl implements TrafficService {
         trafficMyBatisMapper.createTraffic(traffic);
 
         Long trafficId = traffic.getTrafficId();
-        String trafficUrl = localUrl + "/traffics/" + trafficId;
+        String trafficUrl = localUrl + "/traffics/vus/" + trafficId;
 
         traffic.setUrl(trafficUrl);
 
@@ -109,7 +109,7 @@ public class TrafficServiceImpl implements TrafficService {
         }
 
         if (!isFindHttpReqs) {
-            throw new TrafficNotFoundHttpReqs();
+            throw new TrafficNotFoundHttpReqsException();
         }
     }
 
