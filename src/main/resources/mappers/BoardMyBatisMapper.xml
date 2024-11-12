@@ -30,4 +30,5 @@
             <result property="deletedAt" column="deleted_at"/>
         </collection>
     </resultMap>
+
 </mapper>

@@ -32,4 +32,5 @@ public class BoardService {
 
         return idx;
     }
+
 }

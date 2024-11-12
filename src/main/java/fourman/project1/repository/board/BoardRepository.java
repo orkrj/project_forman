@@ -16,5 +16,4 @@ public class BoardRepository {
     public Board findBoardById(Long boardId) {
         return boardMyBatisMapper.findBoardById(boardId);
     }
-
 }
