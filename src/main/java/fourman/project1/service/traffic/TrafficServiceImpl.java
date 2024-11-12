@@ -3,6 +3,7 @@ package fourman.project1.service.traffic;
 import fourman.project1.domain.traffic.Traffic;
 import fourman.project1.exception.traffic.TrafficK6CmdErrorException;
 import fourman.project1.exception.traffic.TrafficNotFoundException;
+import fourman.project1.exception.traffic.TrafficNotFoundHttpReqs;
 import fourman.project1.repository.traffic.TrafficMyBatisMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +54,6 @@ public class TrafficServiceImpl implements TrafficService {
         String trafficUrl = localUrl + "/traffics/" + trafficId;
 
         traffic.setUrl(trafficUrl);
-        trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
 
         CompletableFuture.runAsync(() -> {
             trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
@@ -70,10 +70,13 @@ public class TrafficServiceImpl implements TrafficService {
                 Process process = processBuilder.start();
 
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    StringBuilder result = new StringBuilder();
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        log.info(line);
+                        result.append(line).append(System.lineSeparator());
                     }
+
+                    parseHttpReqs(result.toString(), traffic);
                 }
 
                 int exitCode = process.waitFor();
@@ -88,5 +91,30 @@ public class TrafficServiceImpl implements TrafficService {
         });
 
         return CompletableFuture.completedFuture(trafficId);
+    }
+
+    private void parseHttpReqs(String result, Traffic traffic) {
+        String[] lines = result.split(System.lineSeparator());
+        boolean isFindHttpReqs = false;
+
+        for (String line : lines) {
+            if (line.contains("http_reqs")) {
+                String[] httpReqs = line.split(":")[1].trim().split("\\s+");
+                Long totalReq = Long.parseLong(httpReqs[0]);
+                Long averageReqPerSecond = Long.parseLong(httpReqs[1].split("\\.")[0]);
+                isFindHttpReqs = true;
+
+                saveReqs(traffic, totalReq, averageReqPerSecond);
+            }
+        }
+
+        if (!isFindHttpReqs) {
+            throw new TrafficNotFoundHttpReqs();
+        }
+    }
+
+    private void saveReqs(Traffic traffic, Long totalReq, Long averageReqPerSecond) {
+        traffic.setReqs(totalReq, averageReqPerSecond);
+        trafficMyBatisMapper.setReqs(totalReq, averageReqPerSecond, traffic.getTrafficId());
     }
 }

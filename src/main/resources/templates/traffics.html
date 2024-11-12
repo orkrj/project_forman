@@ -42,7 +42,14 @@
         </tr>
         <tr th:each="traffic : ${traffics}">
           <td th:text="${traffic.trafficId}">1</td>
-          <td><a th:href="@{/traffics/{id}(id=${traffic.trafficId})}" th:text="${traffic.vus}">vus</a></td>
+          <td>
+            <a th:if="${traffic.avgReq != null}"
+               th:href="@{/traffics/{id}(id=${traffic.trafficId})}"
+               th:text="'이 서비스는 1초에 ' + ${traffic.avgReq} + '개의 요청을 처리할 수 있습니다.'"></a>
+            <span th:if="${traffic.avgReq == null}">
+              테스트 결과를 계산 중입니다.
+            </span>
+          </td>
         </tr>
         </tbody>
       </table>

@@ -20,7 +20,9 @@ public class Traffic {
 
     private String duration;
 
-    private int rps;
+    private Long totalReq;
+
+    private Long avgReq;
 
     private User user;
 
@@ -41,5 +43,10 @@ public class Traffic {
         traffic.setUpdatedAt(traffic.getCreatedAt());
 
         return traffic;
+    }
+
+    public void setReqs(Long totalReq, Long avgReq) {
+        this.totalReq = totalReq;
+        this.avgReq = avgReq;
     }
 }
