@@ -11,10 +11,21 @@
         WHERE deleted_at IS NULL
     </select>
 
-    <select id="findPostById" parameterType="long" resultType="fourman.project1.domain.post.Post">
-        SELECT post_id, title, body, user_id, board_id, created_at, updated_at, deleted_at
-        FROM posts
-        WHERE post_id = #{postId} AND deleted_at IS NULL
+    <select id="findPostById" parameterType="long" resultMap="PostResultMap">
+        SELECT
+            p.post_id,
+            p.title,
+            p.body,
+            p.created_at,
+            p.updated_at,
+            p.deleted_at,
+            u.user_id,
+            b.board_id
+        FROM
+            posts p
+        LEFT JOIN users u ON p.user_id = u.user_id
+        LEFT JOIN boards b ON p.board_id = b.board_id
+        WHERE p.post_id = #{postId} AND p.deleted_at IS NULL
     </select>
 
     <insert id="createPost" useGeneratedKeys="true"
@@ -35,5 +46,27 @@
         SET deleted_at = CURRENT_TIMESTAMP
         WHERE post_id = #{postId}
     </update>
+
+    <!-- ResultMap 정의 -->
+    <resultMap id="PostResultMap" type="fourman.project1.domain.post.Post">
+
+        <id property="postId" column="post_id"/>
+        <result property="title" column="title"/>
+        <result property="body" column="body"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="deletedAt" column="deleted_at"/>
+
+        <!-- User 객체 매핑 -->
+        <association property="user" javaType="fourman.project1.domain.user.User">
+            <id property="userId" column="user_id"/>
+        </association>
+
+        <!-- Board 객체 매핑 -->
+        <association property="board" javaType="fourman.project1.domain.board.Board">
+            <id property="boardId" column="board_id"/>
+        </association>
+
+    </resultMap>
 
 </mapper>

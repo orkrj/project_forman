@@ -20,7 +20,7 @@
             <div>
                 <form method="post" th:object="${postRequestDto}" th:action="@{/posts/create}">
                     <label for="title">Service Title</label>
-                    <input class="form-control" id="title" type="text" name="title" th:field="*{title}"
+                    <input class="form-control" id="title" type="text" name="title" th:field="*{title}" maxlength="30"
                            placeholder="Enter title here">
                     <div class="error-message" th:errors="*{title}"></div>
 

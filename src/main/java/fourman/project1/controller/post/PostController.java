@@ -6,10 +6,12 @@ import fourman.project1.domain.post.PostMapper;
 import fourman.project1.domain.post.PostRequestDto;
 import fourman.project1.domain.post.PostResponseDto;
 import fourman.project1.domain.traffic.TrafficRequestDto;
+import fourman.project1.domain.user.CustomUserDetails;
 import fourman.project1.domain.user.User;
 import fourman.project1.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,11 +39,15 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public String findPostById(@PathVariable Long postId, Model model) {
+    public String findPostById(@PathVariable Long postId, Model model,
+                               @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
         // Post 찾기
         Post post = postService.findPostById(postId);
 
         model.addAttribute("post", post);
+        model.addAttribute("user", customUserDetails);
+
         return "detailed-post";
     }
 
@@ -55,6 +61,7 @@ public class PostController {
     public String createPost(@Validated @ModelAttribute PostRequestDto postRequestDto,
                              BindingResult bindingResult,
                              @ModelAttribute TrafficRequestDto testRequestDto,
+                             @AuthenticationPrincipal CustomUserDetails customUserDetails,
                              Model model, RedirectAttributes redirectAttributes) {
 
         // 바인딩 에러시
@@ -64,8 +71,8 @@ public class PostController {
         }
 
         // User와 Board 찾기
-        User findUser = new User(); // userService.findByUserId();
-        Board findBoard = new Board(); // boardService.findByBoardId();
+        User findUser = createUser(customUserDetails);
+        Board findBoard = createBoard();
 
         // Post 생성 및 할당
         Post post = postMapper.postRequestDtoToPost(postRequestDto);
@@ -83,12 +90,12 @@ public class PostController {
     @PatchMapping("/{postId}")
     public String updatePost(@PathVariable Long postId,
                              @Validated @ModelAttribute PostRequestDto postRequestDto,
+                             @AuthenticationPrincipal CustomUserDetails customUserDetails,
                              BindingResult bindingResult, Model model) {
 
-        // User 찾기
-        User findUser = new User();//        userService.findByUserId();
-        // Board 찾기
-        Board findBoard = new Board(); // boardService.findByBoardId();
+        // User와 Board 찾기
+        User findUser = createUser(customUserDetails);
+        Board findBoard = createBoard();
 
         // Post로 매핑
         Post post = postMapper.postRequestDtoToPost(postRequestDto);
@@ -110,6 +117,20 @@ public class PostController {
     public String deletePost(@PathVariable Long postId) {
         // Post 삭제
         postService.deletePost(postId);
-        return "redirect:/";
+        return "redirect:/posts";
+    }
+
+    private static User createUser(CustomUserDetails customUserDetails) {
+        User user = User.builder()
+                .userId(customUserDetails.getUserId())
+                .username(customUserDetails.getUsername())
+                .build();
+        return user;
+    }
+
+    private static Board createBoard() {
+        Board board = new Board(); // boardService.findByBoardId();
+        board.setBoardId(1L); // board는 하나만 운용하여 일단 1로 고정
+        return board;
     }
 }
