@@ -25,14 +25,25 @@
             useGeneratedKeys="true">
 
         INSERT INTO traffics (
-            url, vus, duration, rps, user_id, board_id,     created_at, updated_at, deleted_at)
+            url, vus, duration, total_req, avg_req, user_id, board_id, created_at, updated_at, deleted_at)
         VALUES (
-            #{url}, #{vus}, #{duration}, #{rps}, #{user.userId}, #{board.boardId},
+            #{url}, #{vus}, #{duration}, #{totalReq}, #{avgReq}, #{user.userId}, #{board.boardId},
             #{createdAt}, #{updatedAt}, #{deletedAt});
     </insert>
 
+    <update id="updateTraffic"
+            parameterType="fourman.project1.domain.traffic.Traffic">
+        UPDATE  traffics
+        SET vus = #{vus}, duration = #{duration}, updated_at = #{updatedAt}
+        WHERE traffic_id = #{trafficId}
+    </update>
+
     <update id="setTrafficUrl">
         UPDATE traffics SET url = #{url} WHERE traffic_id = #{id}
+    </update>
+
+    <update id="setReqs">
+        UPDATE traffics SET total_req = #{totalReq}, avg_req = #{avgReq} WHERE traffic_id = #{id}
     </update>
 
     <delete id="forceDeleteTrafficDueToError">

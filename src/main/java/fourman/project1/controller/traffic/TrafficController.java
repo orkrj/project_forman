@@ -23,6 +23,17 @@ public class TrafficController {
     private final TrafficMapper trafficMapper;
     private final TrafficService trafficService;
 
+    @GetMapping("/create")
+    public String createTraffic() {
+        return "create-traffic";
+    }
+
+    @PostMapping("/create")
+    public String createTraffic(@ModelAttribute TrafficRequestDto trafficRequestDto, Model model) {
+        CompletableFuture<Long> trafficId = trafficService.createTraffic(Traffic.from(trafficRequestDto));
+        return "redirect:/traffics/vus/" + trafficId.join();
+    }
+
     @GetMapping
     public String findTraffics(Model model) {
         List<TrafficResponseDto> traffics = trafficService.findTraffics().stream()
@@ -32,30 +43,33 @@ public class TrafficController {
         return "traffics";
     }
 
-    @GetMapping("/{trafficId}")
-    public String findTrafficById(@PathVariable Long trafficId, Model model) {
-                model.addAttribute(
-                        "traffic",
-                        trafficMapper.trafficToTrafficResponseDto(trafficService.findTrafficById(trafficId))
-                );
+    //== 권한이 필요 없는 조회 ==//
+    @GetMapping("/vus/{trafficId}")
+    public String findTrafficByIdPublic(@PathVariable Long trafficId, Model model) {
+        model.addAttribute(
+                "traffic",
+                trafficMapper.trafficToTrafficResponseDto(trafficService.findTrafficById(trafficId))
+        );
 
         return "detailed-traffic";
     }
 
-    @GetMapping("/create")
-    public String createTraffic() {
-        return "create-traffic";
-    }
-
-    @PostMapping("/create")
-    public String createTraffic(@ModelAttribute TrafficRequestDto trafficRequestDto, Model model) {
-
-        CompletableFuture<Long> trafficId = trafficService.createTraffic(Traffic.from(trafficRequestDto));
+    //== 권한이 필요한 조회 ==//
+    @GetMapping("/{trafficId}")
+    public String findTrafficByIdPrivate(@PathVariable Long trafficId, Model model) {
         model.addAttribute(
                 "traffic",
-                trafficMapper.trafficRequestDtoToTrafficResponseDto(trafficRequestDto)
+                trafficMapper.trafficToTrafficResponseDto(trafficService.findTrafficById(trafficId))
         );
 
-        return "redirect:/traffics/" + trafficId.join();
+        return "edit-traffic";
+    }
+
+    @PatchMapping("/{trafficId}")
+    public String updateTraffic(
+            @PathVariable Long trafficId, @ModelAttribute TrafficRequestDto trafficRequestDto
+    ) {
+        trafficService.updateTraffic(trafficId, trafficRequestDto);
+        return "redirect:/traffics/vus/" + trafficId;
     }
 }

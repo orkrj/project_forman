@@ -1,8 +1,10 @@
 package fourman.project1.service.traffic;
 
 import fourman.project1.domain.traffic.Traffic;
+import fourman.project1.domain.traffic.TrafficRequestDto;
 import fourman.project1.exception.traffic.TrafficK6CmdErrorException;
 import fourman.project1.exception.traffic.TrafficNotFoundException;
+import fourman.project1.exception.traffic.TrafficNotFoundHttpReqsException;
 import fourman.project1.repository.traffic.TrafficMyBatisMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -50,11 +53,29 @@ public class TrafficServiceImpl implements TrafficService {
         trafficMyBatisMapper.createTraffic(traffic);
 
         Long trafficId = traffic.getTrafficId();
-        String trafficUrl = localUrl + "/traffics/" + trafficId;
+        String trafficUrl = localUrl + "/traffics/vus/" + trafficId;
 
         traffic.setUrl(trafficUrl);
-        trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
 
+        executeK6(traffic, trafficUrl, trafficId);
+
+        return CompletableFuture.completedFuture(trafficId);
+    }
+
+    @Async
+    @Override
+    public void updateTraffic(Long trafficId, TrafficRequestDto trafficRequestDto) {
+        Traffic findTraffic = findTrafficById(trafficId);
+
+        findTraffic.setVus(trafficRequestDto.getVus());
+        findTraffic.setDuration(trafficRequestDto.getDuration() + "s");
+        findTraffic.setUpdatedAt(ZonedDateTime.now());
+        trafficMyBatisMapper.updateTraffic(findTraffic);
+
+        executeK6(findTraffic, findTraffic.getUrl(), trafficId);
+    }
+
+    private void executeK6(Traffic traffic, String trafficUrl, Long trafficId) {
         CompletableFuture.runAsync(() -> {
             trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
 
@@ -70,10 +91,13 @@ public class TrafficServiceImpl implements TrafficService {
                 Process process = processBuilder.start();
 
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    StringBuilder result = new StringBuilder();
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        log.info(line);
+                        result.append(line).append(System.lineSeparator());
                     }
+
+                    parseHttpReqs(result.toString(), traffic);
                 }
 
                 int exitCode = process.waitFor();
@@ -86,7 +110,30 @@ public class TrafficServiceImpl implements TrafficService {
                 throw new TrafficK6CmdErrorException(e);
             }
         });
+    }
 
-        return CompletableFuture.completedFuture(trafficId);
+    private void parseHttpReqs(String result, Traffic traffic) {
+        String[] lines = result.split(System.lineSeparator());
+        boolean isFindHttpReqs = false;
+
+        for (String line : lines) {
+            if (line.contains("http_reqs")) {
+                String[] httpReqs = line.split(":")[1].trim().split("\\s+");
+                Long totalReq = Long.parseLong(httpReqs[0]);
+                Long averageReqPerSecond = Long.parseLong(httpReqs[1].split("\\.")[0]);
+                isFindHttpReqs = true;
+
+                saveReqs(traffic, totalReq, averageReqPerSecond);
+            }
+        }
+
+        if (!isFindHttpReqs) {
+            throw new TrafficNotFoundHttpReqsException();
+        }
+    }
+
+    private void saveReqs(Traffic traffic, Long totalReq, Long averageReqPerSecond) {
+        traffic.setReqs(totalReq, averageReqPerSecond);
+        trafficMyBatisMapper.setReqs(totalReq, averageReqPerSecond, traffic.getTrafficId());
     }
 }
