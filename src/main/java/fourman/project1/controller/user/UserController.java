@@ -1,16 +1,11 @@
 package fourman.project1.controller.user;
-import fourman.project1.domain.user.UserMapper;
-
+import fourman.project1.domain.user.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
-
-import fourman.project1.domain.user.User;
-import fourman.project1.domain.user.CheckUsernameRequestDto;
-import fourman.project1.domain.user.UserSignUpRequestDto;
 import fourman.project1.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 
 @Controller
 @RequiredArgsConstructor
@@ -23,6 +18,27 @@ public class UserController {
         model.addAttribute("userSignUpRequestDto", new UserSignUpRequestDto());
 
         return "/user/join";
+    }
+
+    @GetMapping("/user/detail")
+    public String detail(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        try {
+            if (customUserDetails.getUserId() == null) {
+                throw new IllegalArgumentException("유효하지 않은 접근입니다.");
+            }
+            model.addAttribute("detailUser", userService.getUserDetail(customUserDetails.getUserId()));
+
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error/invalidUser";
+        }
+        return "/user/detail";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("userSignUpRequestDto", new UserSignUpRequestDto());
+        return "/user/login";
     }
 
     @PostMapping("/join")
@@ -41,17 +57,5 @@ public class UserController {
     public boolean checkUsername(@RequestBody CheckUsernameRequestDto checkUsernameRequestDto) {
         return userService.isUsernameAvailable(checkUsernameRequestDto.getUsername());
     }
-
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("userSignUpRequestDto", new UserSignUpRequestDto());
-        return "/user/login";
-    }
-
-    @GetMapping("/home")
-    public String home(Model model) {
-        return "home";
-    }
-
 
 }

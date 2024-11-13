@@ -13,18 +13,17 @@
 
         private final UserMyBatisMapper userMybatisMapper;
 
-        @Transactional
         public void save(User user) {
             userMybatisMapper.save(user);
         }
-
 
         public User findByUsername(String username) {
             return userMybatisMapper.findByUsername(username);
         }
 
-
         public boolean existsByUsername(String username) {
             return !userMybatisMapper.existsByUsername(username);
         }
+
+        public User findByUserId(Long userId) { return userMybatisMapper.findByUserId(userId); }
     }

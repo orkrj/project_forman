@@ -9,6 +9,8 @@ public interface UserMyBatisMapper {
     void save(User user);
 
     boolean existsByUsername(String username);
+
     User findByUsername(String username);
 
+    User findByUserId(Long userId);
 }
