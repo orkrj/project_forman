@@ -1,7 +1,9 @@
 package fourman.project1.service.traffic;
 
 import fourman.project1.domain.traffic.Traffic;
+import fourman.project1.domain.traffic.TrafficMapper;
 import fourman.project1.domain.traffic.TrafficRequestDto;
+import fourman.project1.domain.traffic.TrafficResponseDto;
 import fourman.project1.exception.traffic.TrafficK6CmdErrorException;
 import fourman.project1.exception.traffic.TrafficNotFoundException;
 import fourman.project1.exception.traffic.TrafficNotFoundHttpReqsException;
@@ -9,6 +11,7 @@ import fourman.project1.repository.traffic.TrafficMyBatisMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class TrafficServiceImpl implements TrafficService {
 
+    private final TrafficMapper trafficMapper;
     private final TrafficMyBatisMapper trafficMyBatisMapper;
 
     @Value("${path.url.local}")
@@ -44,6 +48,15 @@ public class TrafficServiceImpl implements TrafficService {
     public Traffic findTrafficById(Long trafficId) {
         return trafficMyBatisMapper.findTrafficById(trafficId)
                     .orElseThrow(TrafficNotFoundException::new);
+    }
+
+    @Override
+    @Cacheable(cacheNames = "vusGetRequest", key = "#trafficId", cacheManager = "cacheManager")
+    public TrafficResponseDto findTrafficByIdPublic(Long trafficId) {
+        return trafficMapper.trafficToTrafficResponseDto(
+                trafficMyBatisMapper.findTrafficById(trafficId)
+                        .orElseThrow(TrafficNotFoundException::new)
+        );
     }
 
     @Async
