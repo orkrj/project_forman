@@ -4,15 +4,20 @@ import fourman.project1.domain.traffic.Traffic;
 import fourman.project1.domain.traffic.TrafficMapper;
 import fourman.project1.domain.traffic.TrafficRequestDto;
 import fourman.project1.domain.traffic.TrafficResponseDto;
+import fourman.project1.domain.user.CustomUserDetails;
+import fourman.project1.domain.user.User;
 import fourman.project1.exception.traffic.TrafficK6CmdErrorException;
 import fourman.project1.exception.traffic.TrafficNotFoundException;
 import fourman.project1.exception.traffic.TrafficNotFoundHttpReqsException;
+import fourman.project1.exception.traffic.TrafficUserNotFoundException;
 import fourman.project1.repository.traffic.TrafficMyBatisMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -62,6 +67,8 @@ public class TrafficServiceImpl implements TrafficService {
     @Async
     @Override
     public CompletableFuture<Long> createTraffic(Traffic traffic) {
+        User user = findUser();
+        traffic.setUser(user);
         traffic.setDuration(traffic.getDuration() + "s");
         trafficMyBatisMapper.createTraffic(traffic);
 
@@ -154,5 +161,15 @@ public class TrafficServiceImpl implements TrafficService {
     private void saveReqs(Traffic traffic, Long totalReq, Long averageReqPerSecond) {
         traffic.setReqs(totalReq, averageReqPerSecond);
         trafficMyBatisMapper.setReqs(totalReq, averageReqPerSecond, traffic.getTrafficId());
+    }
+
+    private User findUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails user) {
+            return user.getUser();
+        }
+
+        throw new TrafficUserNotFoundException();
     }
 }
