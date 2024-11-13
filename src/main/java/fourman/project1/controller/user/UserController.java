@@ -1,5 +1,8 @@
 package fourman.project1.controller.user;
 import fourman.project1.domain.user.*;
+import fourman.project1.exception.user.DeleteUserException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
 import fourman.project1.service.user.UserService;
@@ -58,4 +61,18 @@ public class UserController {
         return userService.isUsernameAvailable(checkUsernameRequestDto.getUsername());
     }
 
+    @DeleteMapping("/delete/user/{userId}")
+    public void delete(@PathVariable Long userId, HttpServletResponse response) throws DeleteUserException.DeleteUserFailedException {
+
+            if(userId == null){
+                throw new IllegalArgumentException("User Id cannot be null.");
+            }
+            userService.deleteUser(userId);
+
+            Cookie authTokenCookie = new Cookie("auth_token", "");
+            authTokenCookie.setMaxAge(0);
+            authTokenCookie.setPath("/");
+            response.addCookie(authTokenCookie);
+
+        }
 }

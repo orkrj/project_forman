@@ -13,4 +13,6 @@ public interface UserMyBatisMapper {
     User findByUsername(String username);
 
     User findByUserId(Long userId);
+
+    void deleteByUserId(Long userId);
 }

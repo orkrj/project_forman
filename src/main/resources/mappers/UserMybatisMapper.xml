@@ -23,7 +23,11 @@
     </select>
 
     <select id="findByUserId" parameterType="java.lang.Long" resultType="fourman.project1.domain.user.User">
-        SELECT username, password, created_at FROM users WHERE user_id = #{userId}
+        SELECT user_id, username, password, created_at FROM users WHERE user_id = #{userId}
     </select>
+
+    <delete id="deleteByUserId" parameterType="java.lang.Long">
+        DELETE FROM users WHERE user_id = #{userId}
+    </delete>
 
 </mapper>

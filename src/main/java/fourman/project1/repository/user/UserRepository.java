@@ -26,4 +26,6 @@
         }
 
         public User findByUserId(Long userId) { return userMybatisMapper.findByUserId(userId); }
+
+        public void deleteByUserId(Long userId) { userMybatisMapper.deleteByUserId(userId); }
     }
