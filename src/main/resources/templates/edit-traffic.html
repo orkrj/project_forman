@@ -27,11 +27,20 @@
                         <label>Duration</label>
                         <input class="form-control mb-4 inputsz" type="text"
                                th:value="${traffic.duration.substring(0, traffic.duration.length() - 1)}" name="duration" placeholder="Enter duration">
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-lg btn-custom">Submit</button>
+
                     </div>
                 </form>
+
+                <div style="display: flex; gap: 10px;">
+                    <form th:action="@{/traffics/{id}(id=${traffic.trafficId})}" method="post">
+                        <input type="hidden" name="_method" value="patch">
+                        <button type="submit" class="btn btn-lg btn-custom">Submit</button>
+                    </form>
+
+                    <form th:action="@{/traffics/{id}(id=${traffic.trafficId})}" method="post">
+                        <button type="submit" class="btn btn-lg btn-custom">Delete</button>
+                    </form>
+                </div>
             </div>
         </section>
 

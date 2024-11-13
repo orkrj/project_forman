@@ -72,4 +72,10 @@ public class TrafficController {
         trafficService.updateTraffic(trafficId, trafficRequestDto);
         return "redirect:/traffics/vus/" + trafficId;
     }
+
+    @PostMapping("/{trafficId}")
+    public String deleteTraffic(@PathVariable Long trafficId) {
+        trafficService.deleteTraffic(trafficId);
+        return "redirect:/traffics";
+    }
 }

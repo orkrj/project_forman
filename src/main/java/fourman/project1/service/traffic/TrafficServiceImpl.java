@@ -75,6 +75,11 @@ public class TrafficServiceImpl implements TrafficService {
         executeK6(findTraffic, findTraffic.getUrl(), trafficId);
     }
 
+    @Override
+    public void deleteTraffic(Long trafficId) {
+        trafficMyBatisMapper.deleteTraffic(trafficId);
+    }
+
     private void executeK6(Traffic traffic, String trafficUrl, Long trafficId) {
         CompletableFuture.runAsync(() -> {
             trafficMyBatisMapper.setTrafficUrl(trafficUrl, trafficId);
