@@ -10,7 +10,6 @@ import fourman.project1.domain.user.CustomUserDetails;
 import fourman.project1.domain.user.User;
 import fourman.project1.service.post.PostService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,11 +29,13 @@ public class PostController {
     private final PostMapper postMapper;
 
     @GetMapping
-    public String findPosts(Model model) {
+    public String findPosts(@AuthenticationPrincipal CustomUserDetails customUserDetails, Model model) {
+
         // Posts 찾기
         List<Post> posts = postService.findPosts();
 
         model.addAttribute("posts", posts);
+        model.addAttribute("user", customUserDetails);
         return "posts";
     }
 
@@ -76,9 +77,7 @@ public class PostController {
 
         // Post 생성 및 할당
         Post post = postMapper.postRequestDtoToPost(postRequestDto);
-
-        post.setUser(findUser);
-        post.setBoard(findBoard);
+        post.assignUserAndBoard(findUser, findBoard);
 
         // post 저장 및 응답
         postService.createPost(post);
@@ -90,8 +89,9 @@ public class PostController {
     @PatchMapping("/{postId}")
     public String updatePost(@PathVariable Long postId,
                              @Validated @ModelAttribute PostRequestDto postRequestDto,
+                             BindingResult bindingResult,
                              @AuthenticationPrincipal CustomUserDetails customUserDetails,
-                             BindingResult bindingResult, Model model) {
+                             Model model) {
 
         // User와 Board 찾기
         User findUser = createUser(customUserDetails);
@@ -99,9 +99,7 @@ public class PostController {
 
         // Post로 매핑
         Post post = postMapper.postRequestDtoToPost(postRequestDto);
-        post.setPostId(postId);
-        post.setUser(findUser);
-        post.setBoard(findBoard);
+        post.updatePostDetails(postId, findUser, findBoard);
 
         // Post 업데이트
         postService.updatePost(post);
@@ -129,7 +127,7 @@ public class PostController {
     }
 
     private static Board createBoard() {
-        Board board = new Board(); // boardService.findByBoardId();
+        Board board = new Board();
         board.setBoardId(1L); // board는 하나만 운용하여 일단 1로 고정
         return board;
     }

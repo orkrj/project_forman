@@ -9,6 +9,7 @@
         SELECT post_id, title, body, user_id, board_id, created_at, updated_at, deleted_at
         FROM posts
         WHERE deleted_at IS NULL
+        ORDER BY created_at DESC, post_id DESC
     </select>
 
     <select id="findPostById" parameterType="long" resultMap="PostResultMap">

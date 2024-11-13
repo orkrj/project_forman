@@ -40,4 +40,14 @@ public class Post {
         return post;
     }
 
+    public void assignUserAndBoard(User user, Board board) {
+        this.user = user;
+        this.board = board;
+    }
+
+    public void updatePostDetails(Long postId, User user, Board board) {
+        this.postId = postId;
+        this.user = user;
+        this.board = board;
+    }
 }
