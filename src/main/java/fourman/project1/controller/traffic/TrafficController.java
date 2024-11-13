@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +32,14 @@ public class TrafficController {
     }
 
     @PostMapping("/create")
-    public String createTraffic(@ModelAttribute TrafficRequestDto trafficRequestDto) {
+    public String createTraffic(
+            @Validated @ModelAttribute TrafficRequestDto trafficRequestDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            return "create-traffic";
+        }
+
         CompletableFuture<Long> trafficId = trafficService.createTraffic(Traffic.from(trafficRequestDto));
         return "redirect:/traffics/vus/" + trafficId.join();
     }
@@ -64,8 +73,14 @@ public class TrafficController {
 
     @PatchMapping("/{trafficId}")
     public String updateTraffic(
-            @PathVariable Long trafficId, @ModelAttribute TrafficRequestDto trafficRequestDto
+            @PathVariable Long trafficId,
+            @Validated @ModelAttribute TrafficRequestDto trafficRequestDto,
+            BindingResult bindingResult
     ) {
+        if (bindingResult.hasErrors()) {
+            return "edit-traffic";
+        }
+
         trafficService.updateTraffic(trafficId, trafficRequestDto);
         return "redirect:/traffics/vus/" + trafficId;
     }
