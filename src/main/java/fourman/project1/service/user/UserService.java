@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -23,9 +24,10 @@ public class UserService  {
      public void signUp(User user) {
 
             User newUser = User.builder()
-                 .username(user.getUsername())
-                 .password(bCryptPasswordEncoder.encode(user.getPassword()))
-                 .build();
+                    .username(user.getUsername())
+                    .password(bCryptPasswordEncoder.encode(user.getPassword()))
+                    .createdAt(ZonedDateTime.now())
+                    .build();
 
             userRepository.save(newUser);
         }
