@@ -22,5 +22,7 @@ public interface TrafficMyBatisMapper {
 
     void setReqs(@Param("totalReq") Long totalReq, @Param("avgReq") Long avgReq, @Param("id") Long trafficId);
 
+    void deleteTraffic(Long trafficId);
+
     void forceDeleteTrafficDueToError(Long trafficId);
 }

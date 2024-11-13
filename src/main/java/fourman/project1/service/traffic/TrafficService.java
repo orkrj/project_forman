@@ -16,4 +16,6 @@ public interface TrafficService {
     CompletableFuture<Long> createTraffic(Traffic traffic);
 
     void updateTraffic(Long trafficId, TrafficRequestDto trafficRequestDto);
+
+    void deleteTraffic(Long trafficId);
 }
