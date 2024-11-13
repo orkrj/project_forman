@@ -7,6 +7,7 @@ import fourman.project1.domain.traffic.TrafficResponseDto;
 import fourman.project1.service.traffic.TrafficService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class TrafficController {
     }
 
     @PostMapping("/create")
-    public String createTraffic(@ModelAttribute TrafficRequestDto trafficRequestDto, Model model) {
+    public String createTraffic(@ModelAttribute TrafficRequestDto trafficRequestDto) {
         CompletableFuture<Long> trafficId = trafficService.createTraffic(Traffic.from(trafficRequestDto));
         return "redirect:/traffics/vus/" + trafficId.join();
     }
@@ -46,11 +47,7 @@ public class TrafficController {
     //== 권한이 필요 없는 조회 ==//
     @GetMapping("/vus/{trafficId}")
     public String findTrafficByIdPublic(@PathVariable Long trafficId, Model model) {
-        model.addAttribute(
-                "traffic",
-                trafficMapper.trafficToTrafficResponseDto(trafficService.findTrafficById(trafficId))
-        );
-
+        model.addAttribute("traffic", trafficService.findTrafficByIdPublic(trafficId));
         return "detailed-traffic";
     }
 

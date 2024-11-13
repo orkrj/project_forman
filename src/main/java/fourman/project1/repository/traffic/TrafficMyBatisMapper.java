@@ -3,6 +3,7 @@ package fourman.project1.repository.traffic;
 import fourman.project1.domain.traffic.Traffic;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,7 @@ public interface TrafficMyBatisMapper {
 
     void createTraffic(Traffic traffic);
 
-    void updateTraffic(Traffic findTraffic);
+    @Transactional void updateTraffic(Traffic findTraffic);
 
     void setTrafficUrl(@Param("url") String trafficUrl, @Param("id") Long trafficId);
 

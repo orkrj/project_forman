@@ -16,35 +16,44 @@
 
         <section class="col-6">
             <div>
-                <form th:action="@{/traffics/{id}(id=${traffic.trafficId})}" method="post">
+                <form th:action="@{/traffics/{id}(id=${traffic.trafficId})}" method="post" id="trafficForm">
                     <input type="hidden" name="_method" value="patch">
                     <div class="mb-3">
                         <label>Traffic Load</label>
-                        <input class="form-control mb-4 inputsz" type="text"
-                               th:value="${traffic.vus}" name="vus" placeholder="Enter traffic load">
+                        <input class="form-control mb-4 inputsz" type="number"
+                               th:value="${traffic.vus}"
+                               name="vus" placeholder="Enter traffic load">
                     </div>
                     <div class="mb-3">
                         <label>Duration</label>
                         <input class="form-control mb-4 inputsz" type="text"
-                               th:value="${traffic.duration.substring(0, traffic.duration.length() - 1)}" name="duration" placeholder="Enter duration">
+                               th:value="${traffic.duration.substring(0, traffic.duration.length() - 1)}"
+                               name="duration" placeholder="Enter duration">
 
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-lg btn-custom">Submit</button>
+                        <button type="submit" class="btn btn-lg btn-custom" onclick="submitDelete()">Delete</button>
                     </div>
                 </form>
 
-                <div style="display: flex; gap: 10px;">
-                    <form th:action="@{/traffics/{id}(id=${traffic.trafficId})}" method="post">
-                        <input type="hidden" name="_method" value="patch">
-                        <button type="submit" class="btn btn-lg btn-custom">Submit</button>
-                    </form>
+<!--                <form style="gap: 10px"-->
+<!--                      th:action="@{/traffics/{id}(id=${traffic.trafficId})}" method="post">-->
+<!--                    <button type="submit" class="btn btn-lg btn-custom">Delete</button>-->
+<!--                </form>-->
 
-                    <form th:action="@{/traffics/{id}(id=${traffic.trafficId})}" method="post">
-                        <button type="submit" class="btn btn-lg btn-custom">Delete</button>
-                    </form>
-                </div>
             </div>
         </section>
 
     </section>
+
+    <script>
+        function submitDelete() {
+            const form = document.getElementById("trafficForm");
+            form.querySelector("input[name='_method']").value = "post";
+            form.submit();
+        }
+    </script>
 
 </main>
 
