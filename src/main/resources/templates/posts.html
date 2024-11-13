@@ -16,7 +16,7 @@
                 <!-- 프로필 -->
                 <div class="col-8">
                     <div class="container-lg">
-                        <h1 style="font-weight: bold">Smith Shin</h1>
+                        <h1 style="font-weight: bold" th:text="${user != null} ? ${user.username} : 'Smith Shin'">Smith Shin</h1>
                         <span class="badge bg-secondary text-light">Admin</span>
                     </div>
                 </div>

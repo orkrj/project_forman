@@ -20,6 +20,7 @@ public class PostService {
         return postRepository.findPosts();
     }
 
+    @Transactional(readOnly = true)
     public Post findPostById(Long id) {
         return postRepository.findPostById(id).orElseThrow(() -> new PostNotFoundException("Post " + id + " not found"));
     }
