@@ -17,7 +17,7 @@ public interface TrafficMyBatisMapper {
 
     void createTraffic(Traffic traffic);
 
-    @Transactional void updateTraffic(Traffic findTraffic);
+    void updateTraffic(Traffic findTraffic);
 
     void setTrafficUrl(@Param("url") String trafficUrl, @Param("id") Long trafficId);
 

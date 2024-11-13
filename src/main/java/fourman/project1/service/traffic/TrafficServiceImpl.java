@@ -6,10 +6,7 @@ import fourman.project1.domain.traffic.TrafficRequestDto;
 import fourman.project1.domain.traffic.TrafficResponseDto;
 import fourman.project1.domain.user.CustomUserDetails;
 import fourman.project1.domain.user.User;
-import fourman.project1.exception.traffic.TrafficK6CmdErrorException;
-import fourman.project1.exception.traffic.TrafficNotFoundException;
-import fourman.project1.exception.traffic.TrafficNotFoundHttpReqsException;
-import fourman.project1.exception.traffic.TrafficUserNotFoundException;
+import fourman.project1.exception.traffic.*;
 import fourman.project1.repository.traffic.TrafficMyBatisMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,9 +47,15 @@ public class TrafficServiceImpl implements TrafficService {
     }
 
     @Override
-    public Traffic findTrafficById(Long trafficId) {
-        return trafficMyBatisMapper.findTrafficById(trafficId)
-                    .orElseThrow(TrafficNotFoundException::new);
+    public Traffic findTrafficById(Long trafficId, User user) {
+        Traffic findTraffic = trafficMyBatisMapper.findTrafficById(trafficId)
+                .orElseThrow(TrafficNotFoundException::new);
+
+        if (findTraffic.getUserId().equals(user.getUserId())) {
+            return findTraffic;
+        } else {
+            throw new TrafficAccessDeniedException();
+        }
     }
 
     @Override
@@ -67,7 +70,7 @@ public class TrafficServiceImpl implements TrafficService {
     @Async
     @Override
     public CompletableFuture<Long> createTraffic(Traffic traffic, User user) {
-        traffic.setUser(user);
+        traffic.setUserInfo(user, user.getUserId());
         traffic.setDuration(traffic.getDuration() + "s");
         trafficMyBatisMapper.createTraffic(traffic);
 
@@ -83,21 +86,25 @@ public class TrafficServiceImpl implements TrafficService {
 
     @Async
     @Override
-    public void updateTraffic(Long trafficId, TrafficRequestDto trafficRequestDto) {
-        Traffic findTraffic = findTrafficById(trafficId);
+    public void updateTraffic(Long trafficId, TrafficRequestDto trafficRequestDto, User user) {
+        Traffic findTraffic = findTrafficById(trafficId, user);
 
         findTraffic.setVus(trafficRequestDto.getVus());
         findTraffic.setDuration(trafficRequestDto.getDuration() + "s");
         findTraffic.setUpdatedAt(ZonedDateTime.now());
         trafficMyBatisMapper.updateTraffic(findTraffic);
-        log.info("Update vus {}", findTraffic.getVus());
 
         executeK6(findTraffic, findTraffic.getUrl(), trafficId);
     }
 
     @Override
-    public void deleteTraffic(Long trafficId) {
-        trafficMyBatisMapper.deleteTraffic(trafficId);
+    public void deleteTraffic(Long trafficId, User user) {
+        Traffic findTraffic = findTrafficById(trafficId, user);
+        if (findTraffic.getUserId().equals(user.getUserId())) {
+            trafficMyBatisMapper.deleteTraffic(trafficId);
+        } else {
+            throw new TrafficAccessDeniedException();
+        }
     }
 
     private void executeK6(Traffic traffic, String trafficUrl, Long trafficId) {

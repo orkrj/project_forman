@@ -13,13 +13,13 @@ public interface TrafficService {
 
     List<Traffic> findTraffics(User user);
 
-    Traffic findTrafficById(Long trafficId);
+    Traffic findTrafficById(Long trafficId, User user);
 
     TrafficResponseDto findTrafficByIdPublic(Long trafficId);
 
     CompletableFuture<Long> createTraffic(Traffic traffic, User user);
 
-    void updateTraffic(Long trafficId, TrafficRequestDto trafficRequestDto);
+    void updateTraffic(Long trafficId, TrafficRequestDto trafficRequestDto, User user);
 
-    void deleteTraffic(Long trafficId);
+    void deleteTraffic(Long trafficId, User user);
 }

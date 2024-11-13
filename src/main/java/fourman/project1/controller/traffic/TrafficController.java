@@ -69,10 +69,16 @@ public class TrafficController {
 
     //== 권한이 필요한 조회 ==//
     @GetMapping("/{trafficId}")
-    public String findTrafficByIdPrivate(@PathVariable Long trafficId, Model model) {
+    public String findTrafficByIdPrivate(
+            @PathVariable Long trafficId,
+            Model model,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
         model.addAttribute(
                 "traffic",
-                trafficMapper.trafficToTrafficResponseDto(trafficService.findTrafficById(trafficId))
+                trafficMapper.trafficToTrafficResponseDto(
+                        trafficService.findTrafficById(trafficId, user.getUser())
+                )
         );
 
         return "edit-traffic";
@@ -82,19 +88,23 @@ public class TrafficController {
     public String updateTraffic(
             @PathVariable Long trafficId,
             @Validated @ModelAttribute TrafficRequestDto trafficRequestDto,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
         if (bindingResult.hasErrors()) {
             return "edit-traffic";
         }
 
-        trafficService.updateTraffic(trafficId, trafficRequestDto);
+        trafficService.updateTraffic(trafficId, trafficRequestDto, user.getUser());
         return "redirect:/traffics/vus/" + trafficId;
     }
 
     @PostMapping("/{trafficId}")
-    public String deleteTraffic(@PathVariable Long trafficId) {
-        trafficService.deleteTraffic(trafficId);
+    public String deleteTraffic(
+            @PathVariable Long trafficId,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        trafficService.deleteTraffic(trafficId, user.getUser());
         return "redirect:/traffics";
     }
 }

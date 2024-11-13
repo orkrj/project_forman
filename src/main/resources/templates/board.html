@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/css/board.css">
 </head>
 <body>
-<th:block th:replace="fragments/header :: header"></th:block>
+<th:block th:replace="~{fragments/header :: header}"></th:block>
 
 <div class="container text-center mt-5">
     <h1>FOR MAN</h1>
@@ -72,6 +72,6 @@
     </div>
 </div>
 
-<th:block th:replace="fragments/footer :: footer"></th:block>
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>
