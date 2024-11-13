@@ -4,10 +4,12 @@ import fourman.project1.domain.traffic.Traffic;
 import fourman.project1.domain.traffic.TrafficMapper;
 import fourman.project1.domain.traffic.TrafficRequestDto;
 import fourman.project1.domain.traffic.TrafficResponseDto;
+import fourman.project1.domain.user.CustomUserDetails;
 import fourman.project1.service.traffic.TrafficService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,13 +36,15 @@ public class TrafficController {
     @PostMapping("/create")
     public String createTraffic(
             @Validated @ModelAttribute TrafficRequestDto trafficRequestDto,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
         if (bindingResult.hasErrors()) {
             return "create-traffic";
         }
 
-        CompletableFuture<Long> trafficId = trafficService.createTraffic(Traffic.from(trafficRequestDto));
+        CompletableFuture<Long> trafficId =
+                trafficService.createTraffic(Traffic.from(trafficRequestDto), user.getUser());
         return "redirect:/traffics/vus/" + trafficId.join();
     }
 

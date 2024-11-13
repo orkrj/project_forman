@@ -66,8 +66,7 @@ public class TrafficServiceImpl implements TrafficService {
 
     @Async
     @Override
-    public CompletableFuture<Long> createTraffic(Traffic traffic) {
-        User user = findUser();
+    public CompletableFuture<Long> createTraffic(Traffic traffic, User user) {
         traffic.setUser(user);
         traffic.setDuration(traffic.getDuration() + "s");
         trafficMyBatisMapper.createTraffic(traffic);
@@ -163,13 +162,14 @@ public class TrafficServiceImpl implements TrafficService {
         trafficMyBatisMapper.setReqs(totalReq, averageReqPerSecond, traffic.getTrafficId());
     }
 
-    private User findUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails user) {
-            return user.getUser();
-        }
-
-        throw new TrafficUserNotFoundException();
-    }
+    // SecurityContextHolder 을 몾 잡는 이유가 뭐지
+//    private User findUser() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails user) {
+//            return user.getUser();
+//        }
+//
+//        throw new TrafficUserNotFoundException();
+//    }
 }
