@@ -37,11 +37,17 @@
                     </div>
                 </div>
                 <div class="row mb-3 d-flex justify-content-center">
-                    <button class="btn btn-dark" type="submit">Submit Request</button>
+                    <button class="btn btn-dark" type="button" onclick="fakeSubmit()">Submit Request</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        function fakeSubmit() {
+            alert("Request submitted successfully!")
+        }
+    </script>
 </main>
 
 
