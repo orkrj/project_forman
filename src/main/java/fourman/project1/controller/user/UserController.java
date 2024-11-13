@@ -1,16 +1,14 @@
 package fourman.project1.controller.user;
-import fourman.project1.domain.user.UserMapper;
-
+import fourman.project1.domain.user.*;
+import fourman.project1.exception.user.DeleteUserException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.ui.Model;
-
-import fourman.project1.domain.user.User;
-import fourman.project1.domain.user.CheckUsernameRequestDto;
-import fourman.project1.domain.user.UserSignUpRequestDto;
 import fourman.project1.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 
 @Controller
 @RequiredArgsConstructor
@@ -23,6 +21,27 @@ public class UserController {
         model.addAttribute("userSignUpRequestDto", new UserSignUpRequestDto());
 
         return "/user/join";
+    }
+
+    @GetMapping("/user/detail")
+    public String detail(Model model, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        try {
+            if (customUserDetails.getUserId() == null) {
+                throw new IllegalArgumentException("유효하지 않은 접근입니다.");
+            }
+            model.addAttribute("detailUser", userService.getUserDetail(customUserDetails.getUserId()));
+
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error/invalidUser";
+        }
+        return "/user/detail";
+    }
+
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("userSignUpRequestDto", new UserSignUpRequestDto());
+        return "/user/login";
     }
 
     @PostMapping("/join")
@@ -42,16 +61,18 @@ public class UserController {
         return userService.isUsernameAvailable(checkUsernameRequestDto.getUsername());
     }
 
-    @GetMapping("/login")
-    public String login(Model model) {
-        model.addAttribute("userSignUpRequestDto", new UserSignUpRequestDto());
-        return "/user/login";
-    }
+    @DeleteMapping("/delete/user/{userId}")
+    public void delete(@PathVariable Long userId, HttpServletResponse response) throws DeleteUserException.DeleteUserFailedException {
 
-    @GetMapping("/home")
-    public String home(Model model) {
-        return "home";
-    }
+            if(userId == null){
+                throw new IllegalArgumentException("User Id cannot be null.");
+            }
+            userService.deleteUser(userId);
 
+            Cookie authTokenCookie = new Cookie("auth_token", "");
+            authTokenCookie.setMaxAge(0);
+            authTokenCookie.setPath("/");
+            response.addCookie(authTokenCookie);
 
+        }
 }

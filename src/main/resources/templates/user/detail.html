@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{fragments/header :: head}">
+    <title>유저 상세 페이지</title>
+    <link rel="stylesheet" href="/css/detail.css">
+</head>
+<body class="detail-page">
+
+<div th:insert="~{fragments/header :: header}"></div>
+
+<main class="detail-container">
+    <div class="detail-left">
+        <h1>User Details</h1>
+    </div>
+
+    <div class="detail-right">
+        <div class="user-info">
+            <p><strong>username</strong><br>
+                <label>
+                    <input class="detail-input" type="text" th:value="${detailUser.getUsername()}" readonly/>
+                </label>
+            </p>
+            <br>
+            <p><strong>join date</strong><br>
+                <label>
+                    <input class="detail-input" type="text" th:value="${detailUser.getCreatedAt()}" readonly/>
+                </label>
+            </p>
+        </div>
+
+        <button class="delete-button" th:onclick="'confirmAndDelete(' + ${detailUser.getUserId()} + ')'">Delete User</button>
+
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}"></p>
+        </div>
+    </div>
+</main>
+
+<div th:insert="~{fragments/footer :: footer}"></div>
+
+<script>
+    function confirmAndDelete(userId) {
+        if (confirm("정말 이 사용자를 삭제하시겠습니까?")) {
+            fetch(`/delete/user/${userId}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("사용자가 성공적으로 삭제되었습니다.");
+                        window.location.href = '/login';
+                    } else {
+                        return response.text().then(text => {
+                            alert("삭제에 실패했습니다: " + text);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("삭제 요청 중 오류 발생:", error);
+                    alert("삭제 요청 중 오류가 발생했습니다.");
+                });
+        }
+    }
+
+</script>
+
+
+</body>
+</html>
