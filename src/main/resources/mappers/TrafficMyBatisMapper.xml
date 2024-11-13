@@ -6,9 +6,12 @@
 <mapper namespace="fourman.project1.repository.traffic.TrafficMyBatisMapper">
 
     <select id="findTraffics"
+            parameterType="long"
             resultType="fourman.project1.domain.traffic.Traffic">
 
-        SELECT * FROM traffics WHERE deleted_at IS NULL;
+        SELECT * FROM traffics
+        WHERE user_id = #{user}
+        AND deleted_at IS NULL;
     </select>
 
     <select id="findTrafficById"

@@ -45,8 +45,8 @@ public class TrafficServiceImpl implements TrafficService {
     private String k6Path;
 
     @Override
-    public List<Traffic> findTraffics() {
-        return trafficMyBatisMapper.findTraffics();
+    public List<Traffic> findTraffics(User user) {
+        return trafficMyBatisMapper.findTraffics(user.getUserId());
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.Optional;
 @Mapper
 public interface TrafficMyBatisMapper {
 
-    List<Traffic> findTraffics();
+    List<Traffic> findTraffics(Long userId);
 
     Optional<Traffic> findTrafficById(Long trafficId);
 

@@ -49,8 +49,11 @@ public class TrafficController {
     }
 
     @GetMapping
-    public String findTraffics(Model model) {
-        List<TrafficResponseDto> traffics = trafficService.findTraffics().stream()
+    public String findTraffics(
+            Model model,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        List<TrafficResponseDto> traffics = trafficService.findTraffics(user.getUser()).stream()
                                                 .map(trafficMapper::trafficToTrafficResponseDto)
                                                 .toList();
         model.addAttribute("traffics", traffics);

@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface TrafficService {
 
-    List<Traffic> findTraffics();
+    List<Traffic> findTraffics(User user);
 
     Traffic findTrafficById(Long trafficId);
 
