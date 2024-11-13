@@ -26,6 +26,8 @@ public class Traffic {
 
     private User user;
 
+    private Long userId;
+
     private Board board;
 
     private ZonedDateTime createdAt;
@@ -48,5 +50,10 @@ public class Traffic {
     public void setReqs(Long totalReq, Long avgReq) {
         this.totalReq = totalReq;
         this.avgReq = avgReq;
+    }
+
+    public void setUserInfo(User user, Long userId) {
+        this.user = user;
+        this.userId = userId;
     }
 }

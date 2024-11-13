@@ -4,15 +4,17 @@ import fourman.project1.domain.traffic.Traffic;
 import fourman.project1.domain.traffic.TrafficMapper;
 import fourman.project1.domain.traffic.TrafficRequestDto;
 import fourman.project1.domain.traffic.TrafficResponseDto;
-import fourman.project1.exception.traffic.TrafficK6CmdErrorException;
-import fourman.project1.exception.traffic.TrafficNotFoundException;
-import fourman.project1.exception.traffic.TrafficNotFoundHttpReqsException;
+import fourman.project1.domain.user.CustomUserDetails;
+import fourman.project1.domain.user.User;
+import fourman.project1.exception.traffic.*;
 import fourman.project1.repository.traffic.TrafficMyBatisMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -40,14 +42,20 @@ public class TrafficServiceImpl implements TrafficService {
     private String k6Path;
 
     @Override
-    public List<Traffic> findTraffics() {
-        return trafficMyBatisMapper.findTraffics();
+    public List<Traffic> findTraffics(User user) {
+        return trafficMyBatisMapper.findTraffics(user.getUserId());
     }
 
     @Override
-    public Traffic findTrafficById(Long trafficId) {
-        return trafficMyBatisMapper.findTrafficById(trafficId)
-                    .orElseThrow(TrafficNotFoundException::new);
+    public Traffic findTrafficById(Long trafficId, User user) {
+        Traffic findTraffic = trafficMyBatisMapper.findTrafficById(trafficId)
+                .orElseThrow(TrafficNotFoundException::new);
+
+        if (findTraffic.getUserId().equals(user.getUserId())) {
+            return findTraffic;
+        } else {
+            throw new TrafficAccessDeniedException();
+        }
     }
 
     @Override
@@ -61,7 +69,8 @@ public class TrafficServiceImpl implements TrafficService {
 
     @Async
     @Override
-    public CompletableFuture<Long> createTraffic(Traffic traffic) {
+    public CompletableFuture<Long> createTraffic(Traffic traffic, User user) {
+        traffic.setUserInfo(user, user.getUserId());
         traffic.setDuration(traffic.getDuration() + "s");
         trafficMyBatisMapper.createTraffic(traffic);
 
@@ -77,21 +86,25 @@ public class TrafficServiceImpl implements TrafficService {
 
     @Async
     @Override
-    public void updateTraffic(Long trafficId, TrafficRequestDto trafficRequestDto) {
-        Traffic findTraffic = findTrafficById(trafficId);
+    public void updateTraffic(Long trafficId, TrafficRequestDto trafficRequestDto, User user) {
+        Traffic findTraffic = findTrafficById(trafficId, user);
 
         findTraffic.setVus(trafficRequestDto.getVus());
         findTraffic.setDuration(trafficRequestDto.getDuration() + "s");
         findTraffic.setUpdatedAt(ZonedDateTime.now());
         trafficMyBatisMapper.updateTraffic(findTraffic);
-        log.info("Update vus {}", findTraffic.getVus());
 
         executeK6(findTraffic, findTraffic.getUrl(), trafficId);
     }
 
     @Override
-    public void deleteTraffic(Long trafficId) {
-        trafficMyBatisMapper.deleteTraffic(trafficId);
+    public void deleteTraffic(Long trafficId, User user) {
+        Traffic findTraffic = findTrafficById(trafficId, user);
+        if (findTraffic.getUserId().equals(user.getUserId())) {
+            trafficMyBatisMapper.deleteTraffic(trafficId);
+        } else {
+            throw new TrafficAccessDeniedException();
+        }
     }
 
     private void executeK6(Traffic traffic, String trafficUrl, Long trafficId) {
@@ -155,4 +168,15 @@ public class TrafficServiceImpl implements TrafficService {
         traffic.setReqs(totalReq, averageReqPerSecond);
         trafficMyBatisMapper.setReqs(totalReq, averageReqPerSecond, traffic.getTrafficId());
     }
+
+    // SecurityContextHolder 을 몾 잡는 이유가 뭐지
+//    private User findUser() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails user) {
+//            return user.getUser();
+//        }
+//
+//        throw new TrafficUserNotFoundException();
+//    }
 }
