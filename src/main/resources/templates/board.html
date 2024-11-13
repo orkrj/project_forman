@@ -40,28 +40,34 @@
     <h3 class="mt-5">LIVE SERVICES</h3>
     <div class="row mt-4">
         <div class="col-md-3">
-            <div class="card card-post">
-                <img src="product_image_url" class="card-img-top" alt="Product Image">
-                <div class="card-body">
-                    <h6 class="card-subtitle text-muted" th:text="${first.title}">APPLE 아이맥스</h6>
+            <a th:href="@{/posts/{postId}(postId=${first.postId})}" class="text-decoration-none">
+                <div class="card card-post">
+                    <img src="product_image_url" class="card-img-top" alt="Product Image">
+                    <div class="card-body">
+                        <h6 class="card-subtitle text-muted" th:text="${first.title}">APPLE 아이맥스</h6>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card card-post">
-                <img src="product_image_url" class="card-img-top" alt="Product Image">
-                <div class="card-body">
-                    <h6 class="card-subtitle text-muted" th:text="${second.title}">동탄역 롯데캐슬</h6>
+            <a th:href="@{/posts/{postId}(postId=${second.postId})}" class="text-decoration-none">
+                <div class="card card-post">
+                    <img src="product_image_url" class="card-img-top" alt="Product Image">
+                    <div class="card-body">
+                        <h6 class="card-subtitle text-muted" th:text="${second.title}">동탄역 롯데캐슬</h6>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="col-md-3">
-            <div class="card card-post">
-                <img src="product_image_url" class="card-img-top" alt="Product Image">
-                <div class="card-body">
-                    <h6 class="card-subtitle text-muted" th:text="${third.title}">Nike X Sacai</h6>
+            <a th:href="@{/posts/{postId}(postId=${third.postId})}" class="text-decoration-none">
+                <div class="card card-post">
+                    <img src="product_image_url" class="card-img-top" alt="Product Image">
+                    <div class="card-body">
+                        <h6 class="card-subtitle text-muted" th:text="${third.title}">Nike X Sacai</h6>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
 </div>
