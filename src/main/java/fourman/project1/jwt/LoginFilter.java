@@ -42,14 +42,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String username = customUserDetails.getUsername();
 
-        String token = jwtUtil.createJwt(username, 60 * 60 * 10 * 1000L);
+        String token = jwtUtil.createJwt(username, 60 * 60 * 1000L);
 
         // 토큰을 쿠키에 담기
         Cookie cookie = new Cookie("auth_token", token);
         cookie.setHttpOnly(true);
         cookie.setSecure(false);
         cookie.setPath("/");
-        cookie.setMaxAge(60 * 60 * 10);
+        cookie.setMaxAge(60 * 60);
 
         res.addCookie(cookie);
         res.addHeader("Authorization","Bearer "+ token);

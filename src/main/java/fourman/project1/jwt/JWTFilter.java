@@ -28,6 +28,17 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        String requestURI = request.getRequestURI();
+        if (requestURI.startsWith("/login") ||
+                requestURI.equals("/") ||
+                requestURI.equals("/join") ||
+                requestURI.equals("/check-username") ||
+                requestURI.startsWith("/css") ||
+                requestURI.startsWith("/traffics/vus/**")) {
+            filterChain.doFilter(request, response);  // 해당 URL은 JWT 검증을 건너뛰고 필터를 진행
+            return;
+        }
+
         // 쿠키에서 JWT 토큰 추출
         Cookie[] cookies = request.getCookies();
         String token = null;
