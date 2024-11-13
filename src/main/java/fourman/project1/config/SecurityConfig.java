@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
-//@EnableWebSecurity // 잠시 비활성화
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -56,10 +56,8 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-//                        .requestMatchers("/login", "/", "/join", "/check-username", "/css/**","/traffics/vus/**").permitAll()
-                        .requestMatchers("/**").permitAll()
-                        .anyRequest().permitAll());
-//                        .anyRequest().authenticated());
+                        .requestMatchers("/login", "/", "/join", "/check-username", "/css/**","/traffics/vus/**").permitAll()
+                        .anyRequest().authenticated());
 
         http
                 .addFilterBefore(new JWTFilter(jwtUtil,userRepository), LoginFilter.class);
